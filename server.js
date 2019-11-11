@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 var router = express.Router();
 var mongoose = require('mongoose');
-const City = require('./city')
+const City = require('./citySchema')
+const Itinerary = require('./ItinerarySchema');
 const cors = require('cors');
+var ObjectID = require('mongodb').ObjectID;
 
 const port = process.env.PORT || 5000;
 app.listen(port);
@@ -26,4 +28,51 @@ app.get('/getCities', (req, res) => {
         if (err) return console.error(err);
         res.send(cities);
     });
+});
+
+app.get('/getItineraries', (req, res) => {
+
+  Itinerary.find(function (err, itineraries) {
+      if (err) return console.error(err);
+      res.send(itineraries);
+  });
+});
+/*
+var newItinerary = new Itinerary({
+  title: "title 3",
+  profilePic: "avsss",
+  rating: 0,
+  duration: 0,
+  price: 0,
+  city:
+  hashtag: []
+});
+
+app.post('/put', (req, res) => {
+
+  newItinerary.save(function (err, saved) {
+      if (err) return console.error(err);
+     res.send("ok");
+  });
+});
+*/
+
+app.get('/itinerary/:id', (req, res) => {
+  let id = ObjectID(req.params.id);
+  db.collection('itineraries').find(id).toArray( (err, results) => {
+    if(err) {
+      throw err;
+    }
+    res.send(results)
+  });
+});
+
+app.get('/itinerariesByCity/:cityId', (req, res) => {
+  let id = ObjectID(req.params.cityId);
+  db.collection('itineraries').find({city: id}).toArray( (err, results) => {
+    if(err) {
+      throw err;
+    }
+    res.send(results)
+  });
 });

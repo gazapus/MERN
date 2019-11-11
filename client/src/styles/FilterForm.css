@@ -1,0 +1,17 @@
+#inputContainer{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#filter{
+  width: 80%;
+}
+
+#labelFilter{
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
