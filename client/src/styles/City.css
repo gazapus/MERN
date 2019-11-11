@@ -1,0 +1,23 @@
+
+.cityImage img{
+    width: 97vw;
+}
+
+.cityList h3{
+    text-align: center;
+    font-size: 2.2em;
+    color: rgb(175, 180, 149);
+    position: absolute;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    background-color: rgba(68, 33, 68, 0.363);
+    width: 60%;
+    margin-top: -16%;
+    margin-left: 20%;
+}
+
+.cityList{
+    list-style-type: none;
+    width: auto;
+    height: auto;
+    margin: 4% 1% 4% 1%;
+}

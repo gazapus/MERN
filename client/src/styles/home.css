@@ -1,0 +1,24 @@
+nav {
+    padding: 2%;
+}
+
+#menu {
+    float: right;
+}
+
+* {
+    font-family: 'Indie Flower', cursive;
+    font-weight: bold;
+    font-size: 1em;
+}
+
+.carouselContainer {
+    width: 100%
+}
+@media (min-width: 800px) {
+    .carouselContainer{
+        width: 70%;
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+}

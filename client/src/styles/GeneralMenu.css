@@ -1,0 +1,20 @@
+.bottonDropdown {
+    background-color: transparent;
+}
+
+.dropdownToggleMenu {
+    border-radius: 100% !important;
+    height: 10vw;
+    width: 10vw;
+    background-image: url('../images/menu.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    color: yellow !important;
+    background-size: cover;
+}
+@media (min-width: 800px) {
+    .dropdownToggleMenu{
+        width: 6vw;
+        height: 6vw;
+    }
+}

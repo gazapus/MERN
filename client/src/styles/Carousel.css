@@ -1,0 +1,13 @@
+#imageSlide figcaption {
+    position: absolute;
+    bottom: 12%;
+    width: fit-content;
+    height: 20%;
+    color: white;
+    background-color: rgba(52, 90, 51, 0.5);
+    padding: 0 10% 0 5%;
+}
+
+#imageSlide img {
+    width: 100%
+}
