@@ -15,7 +15,7 @@ const CitiesList = props => {
   return props.cities.map(city => {
     return (
       <li key={city._id} className="cityList">
-        <Link to={"/Itineraries/:" + city._id}>
+        <Link to={"/Itineraries/" + city._id}>
           <City
             image="https://www.sia.psu.edu/sites/default/files/styles/content_header/public/nyc_skyline.jpg?itok=0Lk7TAnG"
             city={city.city}

@@ -3,14 +3,14 @@ import {fetchItinerariesPending, fetchItinerariesSuccess, fetchItinerariesError,
 function fetchItineraries(idCity) {
     return dispatch => {
         dispatch(fetchItinerariesPending());
-        fetch('http://localhost:5000/itinerariesByCity/' + idCity.slice(1))
+        fetch('http://localhost:5000/itinerariesByCity/' + idCity)
         .then(res => res.json())
         .then(res => {
             if(res.error) {
                 throw(res.error);
             }
             dispatch(fetchItinerariesSuccess(res));
-            fetch('http://localhost:5000/city/' + idCity.slice(1))
+            fetch('http://localhost:5000/city/' + idCity)
             .then(res => res.json())
             .then(res => {
                 dispatch(setCurrentCity(res));

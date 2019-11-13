@@ -1,0 +1,34 @@
+#itineraryContainer{
+    display: flex;
+    justify-content: center;
+}
+
+#itineraryCard {
+    border-color: black;
+    border-width: 2px;
+    border-style: solid;
+    width: 96vw;
+    margin: 1vw;
+    display: flex;
+    flex-direction: row;
+}
+
+#authorImage{
+    width: 20%;
+    margin: 2%;
+}
+#authorImage img{
+    border-radius: 100%;
+    width: 100%;
+    margin: 2%;
+}
+
+#itineraryInfo{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+#itineraryInfo h3{
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
