@@ -33,7 +33,7 @@ class filterForm extends React.Component {
                   id="filter"
                   value={this.state.elementFilter}
                   onChange={this.handleChange}
-                  placeholder="city or country name"
+                  placeholder="city name"
                 />
               </div>
             </FormGroup>

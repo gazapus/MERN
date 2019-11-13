@@ -4,13 +4,3 @@
     height: auto;
     margin: 4% 1% 4% 1%;
 }
-
-#homeIconContainer{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-#homeIcon{
-  width: 10vw;
-  margin-bottom: 3vh;
-}

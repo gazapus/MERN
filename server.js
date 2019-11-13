@@ -37,27 +37,8 @@ app.get('/getItineraries', (req, res) => {
       res.send(itineraries);
   });
 });
-/*
-var newItinerary = new Itinerary({
-  title: "title 3",
-  profilePic: "avsss",
-  rating: 0,
-  duration: 0,
-  price: 0,
-  city:
-  hashtag: []
-});
 
-app.post('/put', (req, res) => {
-
-  newItinerary.save(function (err, saved) {
-      if (err) return console.error(err);
-     res.send("ok");
-  });
-});
-*/
-
-app.get('/itinerary/:id', (req, res) => {
+app.get('/itineraries/:id', (req, res) => {
   let id = ObjectID(req.params.id);
   db.collection('itineraries').find(id).toArray( (err, results) => {
     if(err) {
@@ -74,5 +55,15 @@ app.get('/itinerariesByCity/:cityId', (req, res) => {
       throw err;
     }
     res.send(results)
+  });
+});
+
+app.get('/city/:id', (req, res) => {
+  let id = ObjectID(req.params.id);
+  db.collection('cities').find(id).toArray( (err, results) => {
+    if(err) {
+      throw err;
+    }
+    res.send(results);
   });
 });

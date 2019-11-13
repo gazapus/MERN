@@ -16,7 +16,7 @@ function Routes() {
         <Route path="/Cities" component={Cities}/>
         <Route path="/LogIn" component={LogIn}/>
         <Route path="/SignIn" component={SignIn}/>
-        <Route path="/Itineraries" component={Itineraries}/>
+        <Route path="/Itineraries/:idCity" component={Itineraries}/>
       </Switch>
   );
 }

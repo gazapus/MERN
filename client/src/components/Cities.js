@@ -7,15 +7,15 @@ import FilterForm from "./FilterForm";
 import AccountMenu from "./AccountMenu";
 import GeneralMenu from "./GeneralMenu";
 import City from "./City";
-import Home from "../images/home.svg";
-
+import HomeIco from "./HomeIco";
 import "../styles/Cities.css";
 
 const CitiesList = props => {
+ 
   return props.cities.map(city => {
     return (
       <li key={city._id} className="cityList">
-        <Link to="/Itineraries:">
+        <Link to={"/Itineraries/:" + city._id}>
           <City
             image="https://www.sia.psu.edu/sites/default/files/styles/content_header/public/nyc_skyline.jpg?itok=0Lk7TAnG"
             city={city.city}
@@ -44,7 +44,7 @@ class Cities extends React.Component {
   filterCities = cityFilter => {
     let filteredCities = this.props.cities;
     filteredCities = filteredCities.filter(city => {
-      let cityName = city.city.toLowerCase() + city.country.toLowerCase();
+      let cityName = city.city.toLowerCase();
       return cityName.indexOf(cityFilter.toLowerCase()) !== -1;
     });
     this.setState({
@@ -53,7 +53,8 @@ class Cities extends React.Component {
   };
 
   render() {
-    if (this.props.pending) return <Spinner color="primary" />;
+    if (this.props.pending) 
+      return <Spinner color="primary" />;
     return (
       <div id="citiesContainer">
         <nav>
@@ -65,11 +66,7 @@ class Cities extends React.Component {
         <div id="citiesContainer">
           <FilterForm onChange={this.filterCities} />
           <CitiesList cities={this.state.filteredCities} />
-          <Link to="/">
-            <div id="homeIconContainer">
-              <img id="homeIcon" src={Home} alt="home" />
-            </div>
-          </Link>
+          <HomeIco/>
         </div>
       </div>
     );
@@ -78,9 +75,9 @@ class Cities extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    cities: state.cities,
-    pending: state.pending,
-    error: state.error
+    cities: state.citiesReducer.cities,
+    pending: state.citiesReducer.pending,
+    error: state.citiesReducer.error
   };
 };
 
