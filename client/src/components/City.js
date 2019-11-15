@@ -3,8 +3,8 @@ import "../styles/City.css";
 
 const City = props => {
   return (
-    <div>
-      <div className="cityImage">
+    <div id="cityContainer">
+      <div id="cityImage">
         <img
           src={props.image}
           alt={props.city}

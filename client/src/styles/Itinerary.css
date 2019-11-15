@@ -1,34 +1,92 @@
-#itineraryContainer{
+.itineraryContainer{
     display: flex;
     justify-content: center;
+    width: 100%;
 }
-
-#itineraryCard {
+.itineraryCardContainer{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     border-color: black;
     border-width: 2px;
     border-style: solid;
-    width: 96vw;
-    margin: 1vw;
+    margin: 1.5vw;
+}
+.itineraryCard {
+    width: 100%;
     display: flex;
     flex-direction: row;
 }
 
-#authorImage{
-    width: 20%;
-    margin: 2%;
+.authorImage{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1%;
 }
-#authorImage img{
+.authorImage img{
     border-radius: 100%;
-    width: 100%;
+    width: 80%;
     margin: 2%;
+    border-width: 2px;
+    border-style: solid;
 }
 
-#itineraryInfo{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+.authorImage figcaption{
+    text-align: center;
+    font-size: 3.3vmin;
+    line-height: 1em;
+}
+.itineraryBody{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.itineraryBody h3{
+    margin-top: 2%;
+    margin-bottom: 1%;
+    font-size: 5vmin;
+}
+.itineraryInfo{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.itineraryInfo h4{
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-right: 7%;
+    font-size: 4vmin;
 }
 
-#itineraryInfo h3{
-    grid-column-start: 1;
-    grid-column-end: 4;
+.itineraryBody ul{
+    width: 95%;
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    font-size: 3.5vmin;
+    color: rgb(48, 47, 47);
+    padding: 0;
+}
+.hashTagList {
+    margin-right: 7%;
+}
+.viewAllBar{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(179, 178, 178);
+}
+.viewAllBar:hover{
+    text-decoration: none;
+}
+@media (min-width: 800px) {
+    .authorImage img{
+        width: 70%
+    }
+    .itineraryCardContainer{
+        width: 80%;
+    }
 }

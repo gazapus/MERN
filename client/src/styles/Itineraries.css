@@ -1,0 +1,26 @@
+@media (min-width: 800px) {
+    #itinerariesBody {
+        width: 80%;
+    }
+}
+
+.itineariesListElement {
+    list-style: none;
+}
+
+#itinerariesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#itinerariesBody {
+    min-height: 92vh;
+}
+
+#navBottomContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-bottom: 1%;
+}

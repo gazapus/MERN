@@ -14,7 +14,6 @@ class filterForm extends React.Component {
     this.setState({
       elementFilter: e.target.value
     });
-    //Ejecuta el cambio en el componenete contenedor
     this.props.onChange(e.target.value);
   };
 

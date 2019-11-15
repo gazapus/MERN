@@ -13,12 +13,27 @@ nav {
 }
 
 .carouselContainer {
-    width: 100%
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#arrow-image{
+    width: 15vmin;
+}
+#arrow-image:hover{
+    background-color: rgba(255, 0, 43, 0.233);
+    border-radius: 100%;
 }
 @media (min-width: 800px) {
-    .carouselContainer{
+    .carouselContainer {
         width: 70%;
         margin-left: 15%;
-        margin-right: 15%;
+    }
+    nav{
+       margin: 0 10% 0 10%;
+        padding-top: 1%;
+        margin-bottom: 0;
+        height: 0;
     }
 }

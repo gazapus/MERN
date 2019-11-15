@@ -9,7 +9,8 @@ const defaultState = {
     pending: true,
     itineraries: [],
     error: null,
-    currentCity: {}
+    currentCity: {},
+    currentCityPending: true
 };
 
 function itinerariesReducer(state = defaultState, action) {
@@ -34,7 +35,8 @@ function itinerariesReducer(state = defaultState, action) {
         case SET_CURRENT_CITY:
             return {
                 ...state,
-                currentCity: action.payload.currentCity[0]
+                currentCity: action.payload.currentCity[0],
+                currentCityPending: false
             }
         default:
             return state;

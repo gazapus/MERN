@@ -1,0 +1,13 @@
+#NavBottonContainer {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+}
+
+#NavIcon {
+     width: 10vmin;
+}
+#NavIcon:hover{
+     background-color: rgba(162, 232, 250, 0.425);
+     border-radius: 100%;
+}

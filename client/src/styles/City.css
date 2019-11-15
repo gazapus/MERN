@@ -1,15 +1,42 @@
-.cityImage img{
-  width: 97vw;
+#cityContainer {
+  display: flex;
+  justify-content: center;
 }
 
-#cityName{
+#cityImage {
+  display: flex;
+  justify-content: center;
+}
+
+#cityImage img {
+  width: 95%;
+}
+
+#cityName {
   text-align: center;
-  font-size: 2em;
+  font-size: 10vmin;
   color: rgb(196, 206, 146);
   position: absolute;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-  background-color: rgba(61, 56, 56, 0.452);
+  background-color: rgba(53, 15, 15, 0.692);
   width: 60%;
-  margin-top: -16%;
-  margin-left: 20%;
+  align-self: center;
+  border-style: groove;
+  border-width: 3px;
+  border-color: rgba(49, 9, 49, 0.562);
+}
+
+#cityName:hover{
+  background-color: rgba(53, 15, 15, 0.473);
+  border-color: rgba(49, 9, 49, 0.226);
+}
+
+@media (min-width: 800px) {
+  #cityImage img {
+    width: 95%;
+  }
+  #cityName {
+    width: 50%;
+    border-width: 5px;
+  }
 }
