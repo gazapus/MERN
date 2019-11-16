@@ -1,0 +1,8 @@
+.imgCarousel{
+  width: 90%;
+}
+.activityContainer{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}

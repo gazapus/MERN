@@ -67,3 +67,14 @@ app.get('/city/:id', (req, res) => {
     res.send(results);
   });
 });
+
+
+app.get('/activitiesByitinerary/:itineraryId', (req, res) => {
+  let id = ObjectID(req.params.itineraryId);
+  db.collection('activities').find({itinerary: id}).toArray( (err, results) => {
+    if(err) {
+      throw err;
+    }
+    res.send(results);
+  });
+});

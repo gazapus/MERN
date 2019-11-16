@@ -3,6 +3,7 @@ import City from "./City";
 import { Spinner } from "reactstrap";
 import { connect } from "react-redux";
 import fetchItinerariesAction from "../redux/actions/fetchItineraries";
+import fetchCurrentCityAction from "../redux/actions/fetchCurrentCity";
 import Itinerary from './Itinerary';
 import '../styles/Itineraries.css';
 import NavBotton from './NavBotton';
@@ -23,6 +24,8 @@ class Itineraries extends React.Component {
 
   componentDidMount() {
     this.props.fetchItineraries(this.props.match.params.idCity);
+    this.props.fetchCurrentCity(this.props.match.params.idCity);
+    console.log("");
   }
 
   render() {
@@ -33,7 +36,7 @@ class Itineraries extends React.Component {
         <div id="itinerariesBody">
           <City city={this.props.currentCity.city} image="https://www.sia.psu.edu/sites/default/files/styles/content_header/public/nyc_skyline.jpg?itok=0Lk7TAnG" />
           <div id="itinerariesList">
-            <h5>Available Mytineraries</h5>
+            <h5>Available Mytineraries:</h5>
             <ItinerariesList itineraries={this.props.itineraries} />
           </div>
         </div>
@@ -58,7 +61,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchItineraries: (idCity) => dispatch(fetchItinerariesAction(idCity))
+    fetchItineraries: (idCity) => dispatch(fetchItinerariesAction(idCity)),
+    fetchCurrentCity: (idCity)  => dispatch(fetchCurrentCityAction(idCity))
   };
 };
 

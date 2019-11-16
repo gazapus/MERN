@@ -24,3 +24,7 @@
     grid-template-columns: 1fr 1fr 1fr;
     margin-bottom: 1%;
 }
+#itinerariesList h5{
+  font-size: 5vmin;
+  margin: 2vh 0 2vw 2vh;
+}
