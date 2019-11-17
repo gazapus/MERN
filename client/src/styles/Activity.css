@@ -1,0 +1,25 @@
+.activityContainer{
+     width: 100%;
+     display: flex;
+}
+
+.activityBody {
+     width: 100%;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     margin: 5%;
+}
+.activityBody img{
+     width: 100%;
+     height: 100%;
+     object-fit: cover;
+
+}
+.activityBody h4{
+     margin-top: -25%;
+     font-family: Georgia, 'Times New Roman', Times, serif;
+     font-weight: bold;
+     background-color: rgba(0, 0, 0, 0.603);
+     color: white;
+}

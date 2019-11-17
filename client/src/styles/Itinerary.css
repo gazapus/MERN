@@ -80,7 +80,11 @@
     background-color: rgb(179, 178, 178);
 }
 .viewAllBar:hover{
-    text-decoration: none;
+    text-decoration: solid;
+    cursor: pointer;
+}
+.viewAllBar span{
+    color: blue;
 }
 @media (min-width: 800px) {
     .authorImage img{
@@ -89,4 +93,14 @@
     .itineraryCardContainer{
         width: 80%;
     }
+    .activitiesListCarousel{
+        width: 100% !important;
+    }
+}
+
+.invisible{
+    visibility: hidden;
+}
+.activitiesListCarousel{
+    width: 94vw;
 }

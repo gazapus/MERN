@@ -22,10 +22,24 @@ const ItinerariesList = props => {
 
 class Itineraries extends React.Component {
 
+  constructor(props){
+    super(props);
+    this.state = {
+      viewNav: false
+    }
+    this.reloadView = this.reloadView.bind(this);
+  }
+
   componentDidMount() {
     this.props.fetchItineraries(this.props.match.params.idCity);
     this.props.fetchCurrentCity(this.props.match.params.idCity);
     console.log("");
+  }
+
+  reloadView(){
+    this.setState({
+      viewNav: false
+    });
   }
 
   render() {

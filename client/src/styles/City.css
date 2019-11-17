@@ -29,6 +29,7 @@
 #cityName:hover{
   background-color: rgba(53, 15, 15, 0.473);
   border-color: rgba(49, 9, 49, 0.226);
+  color:rgb(235, 255, 134);
 }
 
 @media (min-width: 800px) {

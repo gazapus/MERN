@@ -1,9 +1,9 @@
 import React from "react";
 import "../styles/Itinerary.css";
-import Activities from "./Activities";
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
 import { connect } from "react-redux";
 import { Collapse } from 'reactstrap';
+import ActivitiesCarousel from './ActivitiesCarousel';
 
 const HashTagList = props => {
   return props.hashtags.map(hashtag => {
@@ -17,13 +17,13 @@ const HashTagList = props => {
 
 class Itinerary extends React.Component {
 
-  
   constructor(props){
     super(props);
     this.state = {
       isOpen: false
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.handleClickOpen = this.handleClickOpen.bind(this);
+    this.handleClickClose = this.handleClickClose.bind(this);
     this.toggle = this.toggle.bind(this);
   }
 
@@ -33,11 +33,15 @@ class Itinerary extends React.Component {
     });
   }
 
-  handleClick(e) {
+  handleClickOpen(e) {
     e.preventDefault();
     this.toggle();
-    console.log('The link was clicked.');
     this.props.fetchActivities(this.props.itinerary._id);
+  }
+
+  handleClickClose(e){
+    e.preventDefault();
+    this.toggle();
   }
 
   render() {
@@ -65,16 +69,18 @@ class Itinerary extends React.Component {
             </div>
           </div>
           <div>
-            <a href="#" className="viewAllBar" onClick={this.handleClick }>
-              ⮟ view all ⮟
+            <a className={this.state.isOpen ? "invisible" : "viewAllBar"} onClick={this.handleClickOpen }>
+              <span>⮟ view all ⮟</span>
             </a>
           </div>
           <Collapse isOpen={this.state.isOpen}>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt magni, voluptas debitis
-          similique porro a molestias consequuntur earum odio officiis natus, amet hic, iste sed
-          dignissimos esse fuga! Minus, alias.</p>
+          <div className="activitiesListCarousel">
+            <ActivitiesCarousel activities={this.props.activities}/>
+          </div>
+            <a className="viewAllBar" onClick={this.handleClickClose }>
+              <span>⮝ close ⮝</span>
+            </a>
           </Collapse>
-
         </div>
       </div>
     );
