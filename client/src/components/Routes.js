@@ -6,7 +6,7 @@ import {
 import Cities from './Cities';
 import Home from './Home';
 import LogIn from './LogIn';
-import SignIn from './SignIn';
+import SignIn from './SignUp';
 import Itineraries from './Itineraries';
 import Acti from './ActivitiesCarousel';
 

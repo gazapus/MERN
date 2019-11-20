@@ -25,12 +25,11 @@ export default (props) => {
 
      const activitiesList = props.activities.map(activity => {
           return (
-               <div>
+               <li key={activity._id}>
                     <Activity activity={activity} />
-               </div>
+               </li>
           )
-     }
-     );
+     });
 
      return (
           <Carousel swipeable={false}

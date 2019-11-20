@@ -18,9 +18,9 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
-    return this.props.comments.map((comment, index) => {
+    return this.props.comments.map((comment) => {
       return (  
-      <li className="commentElement" key={index}>
+      <li className="commentElement" key={comment}>
         <Comment text={comment} />
       </li>
       )
@@ -109,7 +109,9 @@ class Itinerary extends React.Component {
               <h5>Activities: </h5>
               <ActivitiesCarousel activities={this.props.activities} />
               <h5>Comments:</h5>
-              <CommentsList comments={this.props.comments}/>
+              <ul>
+                <CommentsList comments={this.props.comments}/>
+              </ul>
             </div>
             <a className="viewAllBar" onClick={this.handleClickClose}>
               <span>⮝ close ⮝</span>

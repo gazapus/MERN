@@ -107,3 +107,6 @@
 .activitiesListCarousel{
     width: 94vw;
 }
+.activitiesListCarousel ul{
+  list-style: none;
+}
