@@ -12,6 +12,7 @@ const defaultState = {
 function activitiesReducer(state = defaultState, action) {
   switch (action.type) {
       case FETCH_ACTIVITIES_SUCCESS:
+        /*activities[action.payload.idItinerary] = action.payload.activities*/
           return {
               ...state,
               pending: false,

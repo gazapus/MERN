@@ -78,6 +78,7 @@
     display: flex;
     justify-content: center;
     background-color: rgb(179, 178, 178);
+    margin: 0;
 }
 .viewAllBar:hover{
     text-decoration: solid;
@@ -100,6 +101,8 @@
 
 .invisible{
     visibility: hidden;
+    display: none;
+    margin: 0;
 }
 .activitiesListCarousel{
     width: 94vw;

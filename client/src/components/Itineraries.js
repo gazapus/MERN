@@ -11,12 +11,27 @@ import HomeIcon from "../images/home.svg";
 import LeftArrowIcon from '../images/leftArrow.png';
 
 class ItinerariesList extends React.Component {
+  
+  children = [];
+
+  closeAll = (exception) => {
+    for(let child of this.children){
+      if(child.getIdItinerary() !== exception){
+        child.closeView();
+      }
+    }
+  }
 
   render() {
-    return this.props.itineraries.map(itinerary => {
+    return this.props.itineraries.map((itinerary, index) => {
       return (
         <li className="itineariesListElement" key={itinerary._id}>
-          <Itinerary itinerary={itinerary} />
+          <Itinerary 
+            onRef={ref => (this.children[index] = ref)} 
+            itinerary={itinerary} 
+            onOpen={this.closeAll}
+            comments={itinerary.comments}
+          />
         </li>
       );
     });
@@ -28,7 +43,6 @@ class Itineraries extends React.Component {
   componentDidMount() {
     this.props.fetchItineraries(this.props.match.params.idCity);
     this.props.fetchCurrentCity(this.props.match.params.idCity);
-    console.log("");
   }
 
   render() {

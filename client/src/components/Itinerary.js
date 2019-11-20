@@ -4,6 +4,7 @@ import fetchActivitiesAction from '../redux/actions/fetchActivities';
 import { connect } from "react-redux";
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
+import Comment from './Comment';
 
 const HashTagList = props => {
   return props.hashtags.map(hashtag => {
@@ -15,10 +16,21 @@ const HashTagList = props => {
   });
 };
 
+class CommentsList extends React.Component {
+  render() {
+    return this.props.comments.map((comment, index) => {
+      return (  
+      <li className="commentElement" key={index}>
+        <Comment text={comment} />
+      </li>
+      )
+    });
+  }
+}
 
 class Itinerary extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       isOpen: false
@@ -26,6 +38,23 @@ class Itinerary extends React.Component {
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClickClose = this.handleClickClose.bind(this);
     this.toggle = this.toggle.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.onRef(this)
+  }
+  componentWillUnmount() {
+    this.props.onRef(undefined)
+  }
+
+  closeView() {
+    this.setState({
+      isOpen: false
+    });
+  }
+
+  getIdItinerary() {
+    return this.props.itinerary._id;
   }
 
   toggle = () => {
@@ -36,11 +65,12 @@ class Itinerary extends React.Component {
 
   handleClickOpen(e) {
     e.preventDefault();
+    this.props.onOpen(this.props.itinerary._id);
     this.toggle();
     this.props.fetchActivities(this.props.itinerary._id);
   }
 
-  handleClickClose(e){
+  handleClickClose(e) {
     e.preventDefault();
     this.toggle();
   }
@@ -70,15 +100,18 @@ class Itinerary extends React.Component {
             </div>
           </div>
           <div>
-            <a className={this.state.isOpen? "invisible":"viewAllBar"} onClick={this.handleClickOpen }>
+            <a className={this.state.isOpen ? "invisible" : "viewAllBar"} onClick={this.handleClickOpen}>
               <span>⮟ view all ⮟</span>
             </a>
           </div>
           <Collapse isOpen={this.state.isOpen}>
-          <div className="activitiesListCarousel">
-            <ActivitiesCarousel activities={this.props.activities}/>
-          </div>
-            <a className="viewAllBar" onClick={this.handleClickClose }>
+            <div className="activitiesListCarousel">
+              <h5>Activities: </h5>
+              <ActivitiesCarousel activities={this.props.activities} />
+              <h5>Comments:</h5>
+              <CommentsList comments={this.props.comments}/>
+            </div>
+            <a className="viewAllBar" onClick={this.handleClickClose}>
               <span>⮝ close ⮝</span>
             </a>
           </Collapse>
