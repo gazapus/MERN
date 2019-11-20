@@ -10,36 +10,25 @@ import NavBotton from './NavBotton';
 import HomeIcon from "../images/home.svg";
 import LeftArrowIcon from '../images/leftArrow.png';
 
-const ItinerariesList = props => {
-  return props.itineraries.map(itinerary => {
-    return (
-      <li className="itineariesListElement" key={itinerary._id}>
-        <Itinerary itinerary={itinerary} />
-      </li>
-    );
-  });
+class ItinerariesList extends React.Component {
+
+  render() {
+    return this.props.itineraries.map(itinerary => {
+      return (
+        <li className="itineariesListElement" key={itinerary._id}>
+          <Itinerary itinerary={itinerary} />
+        </li>
+      );
+    });
+  }
 };
 
 class Itineraries extends React.Component {
-
-  constructor(props){
-    super(props);
-    this.state = {
-      viewNav: false
-    }
-    this.reloadView = this.reloadView.bind(this);
-  }
 
   componentDidMount() {
     this.props.fetchItineraries(this.props.match.params.idCity);
     this.props.fetchCurrentCity(this.props.match.params.idCity);
     console.log("");
-  }
-
-  reloadView(){
-    this.setState({
-      viewNav: false
-    });
   }
 
   render() {
@@ -76,7 +65,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchItineraries: (idCity) => dispatch(fetchItinerariesAction(idCity)),
-    fetchCurrentCity: (idCity)  => dispatch(fetchCurrentCityAction(idCity))
+    fetchCurrentCity: (idCity) => dispatch(fetchCurrentCityAction(idCity))
   };
 };
 

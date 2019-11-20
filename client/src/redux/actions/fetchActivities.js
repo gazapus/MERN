@@ -1,4 +1,4 @@
-import {fetchActivitiesPending, fetchActivitiesSuccess, fetchActivitiesError} from './activitiesAction';
+import {fetchActivitiesSuccess, fetchActivitiesError} from './activitiesAction';
 
 function fetchActivities(idItinerary) {
     return dispatch => {

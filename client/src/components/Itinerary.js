@@ -15,6 +15,7 @@ const HashTagList = props => {
   });
 };
 
+
 class Itinerary extends React.Component {
 
   constructor(props){
@@ -69,7 +70,7 @@ class Itinerary extends React.Component {
             </div>
           </div>
           <div>
-            <a className={this.state.isOpen ? "invisible" : "viewAllBar"} onClick={this.handleClickOpen }>
+            <a className={this.state.isOpen? "invisible":"viewAllBar"} onClick={this.handleClickOpen }>
               <span>⮟ view all ⮟</span>
             </a>
           </div>
