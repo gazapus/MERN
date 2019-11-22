@@ -50,3 +50,15 @@
       width: 60%;
   }
 }
+#succefullyRegisterMessage{
+  margin-top: 10%;
+  color: rgb(0, 0, 31);
+  background-color: rgb(155, 230, 81);
+  border-style: outset;
+  padding: 10% 5% 10% 5%;
+  border-radius: 10px;
+}
+#succefullyRegisterMessage h2{
+  text-align: center;
+  font-size: 5vmin;
+}

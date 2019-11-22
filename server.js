@@ -99,7 +99,11 @@ app.get("/users/all", (req, res) => {
 
 app.post(
   "/users/register", 
-  [check("email").isEmail()], 
+  //Verificación que los datos se hayan ingresado sean correctos
+  [ check("email").isEmail(),
+    check('password').isLength({ min: 8 }).withMessage('must be at least 8 chars long'),
+    check("name").not().isEmpty().withMessage('must not be empty name')
+  ], 
   ( req, response, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -125,7 +129,9 @@ app.post(
             response.send(res);
           });
         } else {
-          response.send("ya existe un usuario");
+          response.statusMessage = "Existe un usuario con este email";
+          console.log("error 400")
+          response.status(500).send('Something broke!');
         }
       });
 });
