@@ -1,31 +1,31 @@
-#signUpContainer{
+#logInContainer{
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-#signUpBody{
+#logInBody{
   min-height: 88vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-#signUpBody h2{
+#logInBody h2{
   font-size: 7vmin;
 }
-#signUpBody form{
+#logInBody form{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 90%;
 }
-#signUpBody input{
+#logInBody input{
   border-radius: 7px;
   margin-bottom: 5%;
   width: 100%;
   height: 5vh;
 }
-#signUpBody label{
+#logInBody label{
   font-size: 5vmin;
   margin-bottom: 0;
 }
@@ -50,7 +50,7 @@
       width: 60%;
   }
 }
-#succefullyRegisterMessage{
+#logInSuccefullMessage{
   margin-top: 10%;
   color: rgb(0, 0, 31);
   background-color: rgb(155, 230, 81);
@@ -58,11 +58,11 @@
   padding: 10% 5% 10% 5%;
   border-radius: 10px;
 }
-#succefullyRegisterMessage h2{
+#logInSuccefullMessage h2{
   text-align: center;
   font-size: 5vmin;
 }
-#signUpBody h5{
+#errorMessage{
   color: red;
   background-color: rgb(248, 203, 203);
   width: 90%;

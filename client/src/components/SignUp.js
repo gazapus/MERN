@@ -41,7 +41,7 @@ class SignUp extends React.Component {
       .catch(error => {
         console.log(error.response.statusText);
         this.setState({
-          errorMessage: error.response.statusText
+          errorMessage: "ERROR: " + error.response.statusText
         });
       });
   }
@@ -100,11 +100,11 @@ class SignUp extends React.Component {
               onChange={this.handleChange}
             />
             <label id="buttonContainer">
-              <input type="submit" value="Send input" />
+              <input type="submit" value="Send" />
             </label>
           </form>
+          <h5>{this.state.errorMessage}</h5>
         </div>
-        <h5>{this.state.errorMessage}</h5>
         <NavButton link="/" alt="home" img={HomeIcon} />
       </div>
     );

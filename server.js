@@ -6,6 +6,8 @@ const City = require("./citySchema");
 const Itinerary = require("./ItinerarySchema");
 const User = require("./userSchema");
 const cors = require("cors");
+//const jwt = require("jsonwebtoken");
+//const key = require("<path to your config file>");
 var ObjectID = require("mongodb").ObjectID;
 const { check, validationResult } = require('express-validator');
 
@@ -125,7 +127,10 @@ app.post(
             url: req.body.url
           });
           newUser.save(function(err, res) {
-            if (err) return console.error(err);
+            if (err){
+              console.log(err);
+              response.status(500).send('Something broke!');
+            } 
             response.send(res);
           });
         } else {
@@ -134,4 +139,8 @@ app.post(
           response.status(500).send('Something broke!');
         }
       });
+});
+
+app.post("/users/login", (req, res) => {
+
 });
