@@ -1,18 +1,18 @@
-import React from "react";
-import NavButton from "./NavBotton";
-import HomeIcon from "../images/home.svg";
-import fetchLogIn from "../redux/actions/loginAction";
-import { connect } from "react-redux";
-import "../styles/LogIn.css";
+import React from 'react';
+import NavButton from './NavBotton';
+import HomeIcon from '../images/home.svg';
+import { fetchLogIn, UserLogOut } from '../redux/actions/loginAction';
+import { connect } from 'react-redux';
+import '../styles/LogIn.css';
+
+import jwt_decode from 'jwt-decode';
 
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      errorMessage: "",
-      success: false
+      email: '',
+      password: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
@@ -20,9 +20,9 @@ class LogIn extends React.Component {
 
   submit(event) {
     event.preventDefault();
-    console.log("evento enviado");    
+    console.log('evento enviado');
     console.log(this.props);
-    this.props.fetchLogIn(this.state.email, this.state.password);
+    this.props.fetchLogin(this.state.email, this.state.password);
   }
 
   handleChange(event) {
@@ -31,46 +31,52 @@ class LogIn extends React.Component {
 
   render() {
     let errorMessage;
-    if(this.state.errorMessage){
-      errorMessage = <h5 id="errorMessage">{this.state.errorMessage}</h5>
+    if (this.props.errorMessage) {
+      errorMessage = <h5 id='errorMessage'>{this.state.errorMessage}</h5>;
     }
-    if (this.state.success)
+    if (this.props.success) {
+      console.log(jwt_decode(this.props.token));
       return (
-        <div id="logInContainer">
-          <div id="logInSuccefullMessage">
-            <h2>You have been login registered</h2>
+        <div id='logInContainer'>
+          <div id='logInBody'>
+            <div id='logInSuccefullMessage'>
+              <h2>Welcome back</h2>
+            </div>
+            <button onClick={this.props.logOut}>salir</button>
           </div>
+          <NavButton link='/' alt='home' img={HomeIcon} />
         </div>
       );
+    }
     return (
-      <div id="logInContainer">
-        <div id="logInBody">
+      <div id='logInContainer'>
+        <div id='logInBody'>
           <h2>Log In</h2>
           <form onSubmit={this.submit}>
-            <label htmlFor="email">Email:</label>
+            <label htmlFor='email'>Email:</label>
             <input
-              name="email"
-              id="email"
-              type="email"
+              name='email'
+              id='email'
+              type='email'
               onChange={this.handleChange}
               required
             />
-            <label htmlFor="password">Password:</label>
+            <label htmlFor='password'>Password:</label>
             <input
-              minLength="8"
-              name="password"
-              id="password"
-              type="password"
+              minLength='8'
+              name='password'
+              id='password'
+              type='password'
               onChange={this.handleChange}
               required
             />
-            <label id="buttonContainer">
-              <input type="submit" value="Log in" />
+            <label id='buttonContainer'>
+              <input type='submit' value='Log in' />
             </label>
           </form>
           {errorMessage}
         </div>
-        <NavButton link="/" alt="home" img={HomeIcon} />
+        <NavButton link='/' alt='home' img={HomeIcon} />
       </div>
     );
   }
@@ -78,18 +84,17 @@ class LogIn extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    success: state.loginReducer.state,
-    token: state.loginReducer.token
+    success: state.loginReducer.success,
+    token: state.loginReducer.token,
+    errorMessage: state.loginReducer.errorMessage
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchLogin: (a,b) => dispatch(fetchLogIn(a,b))
+    fetchLogin: (a, b) => dispatch(fetchLogIn(a, b)),
+    logOut: () => dispatch(UserLogOut())
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LogIn);
+export default connect(mapStateToProps, mapDispatchToProps)(LogIn);

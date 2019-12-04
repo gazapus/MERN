@@ -1,21 +1,35 @@
-import { FETCH_USER } from '../actions/loginAction.js';
-
 const defaultState = {
-     succes: false,
-     token: null
+  success: false,
+  token: null,
+  errorMessage: ''
 };
 
 function loginReducer(state = defaultState, action) {
-     switch (action.type) {
-          case FETCH_USER:
-               return {
-                    ...state,
-                    success: true,
-                    token: action.payload.token
-               }
-          default:
-               return state;
-     }
+  switch (action.type) {
+    case 'USER_LOGIN_OK':
+      console.log(action.payload.token);
+      return {
+        ...state,
+        success: true,
+        token: action.payload.token,
+        errorMessage: ''
+      };
+    case 'USER_LOGIN_ERROR':
+      return {
+        ...state,
+        success: false,
+        errorMessage: 'ERROR AL LOGUARSE',
+        token: ''
+      };
+    case 'USER_LOGOUT':
+      return {
+        ...state,
+        success: false,
+        token: ''
+      };
+    default:
+      return state;
+  }
 }
 
 export default loginReducer;
