@@ -1,7 +1,8 @@
 import React from "react";
 import NavButton from "./NavBotton";
 import HomeIcon from "../images/home.svg";
-import axios from "axios";
+import fetchLogIn from "../redux/actions/loginAction";
+import { connect } from "react-redux";
 import "../styles/LogIn.css";
 
 class LogIn extends React.Component {
@@ -19,30 +20,9 @@ class LogIn extends React.Component {
 
   submit(event) {
     event.preventDefault();
-    console.log("evento enviado")
-    this.setState({     /*Vacía el mensaje de error para que el usuario puede notar si reaparece el mismo error*/
-      errorMessage: ""
-    });
-    var url = "http://localhost:5000/users/login";
-    var data = {
-      email: this.state.email,
-      password: this.state.password
-    };
-    axios
-      .post(url, data)
-      .then(res => {
-        console.log("bien");
-        console.log(res);
-        this.setState({
-          success: true
-        });
-      })
-      .catch(error => {
-        console.log(error.response.statusText);
-        this.setState({
-          errorMessage: "ERROR: " + error.response.statusText
-        });
-      });
+    console.log("evento enviado");    
+    console.log(this.props);
+    this.props.fetchLogIn(this.state.email, this.state.password);
   }
 
   handleChange(event) {
@@ -96,4 +76,20 @@ class LogIn extends React.Component {
   }
 }
 
-export default LogIn;
+const mapStateToProps = state => {
+  return {
+    success: state.loginReducer.state,
+    token: state.loginReducer.token
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchLogin: (a,b) => dispatch(fetchLogIn(a,b))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(LogIn);
