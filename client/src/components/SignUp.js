@@ -87,19 +87,7 @@ class SignUp extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-/*
-  countries = () => {
-    fetch('https://restcountries.eu/rest/v2/all').then(response => {
-      response.json().then(res => {
-        return (res.map(country => {
-          return (
-            <option value={country.name} selected>{country.name}</option>
-          )
-        }))
-      })
-    })
-  }
-*/
+
   componentDidMount() {
     fetch('https://restcountries.eu/rest/v2/all').then(response => {
       response.json().then(res => {
