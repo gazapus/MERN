@@ -1,26 +1,41 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const FETCH_USER = 'FETCH_USER';
+export function fetchLogIn(usermail, password) {
+  return dispatch => {
+    var url = 'http://localhost:5000/users/login';
+    var data = {
+      email: usermail,
+      password: password
+    };
+    axios
+      .post(url, data)
+      .then(res => {
+        console.log('log in action exitoso hasta ahora');
+        console.log(res);
+        dispatch(UserLoginOk(res.data.token));
+      })
+      .catch(error => {
+        console.log(error.response.statusText);
+        dispatch(UserLoginError());
+      });
+  };
+}
 
-export default function fetchLogIn(usermail, password) {
-     var token;
-     var url = "http://localhost:5000/users/login";
-     var data = {
-          email: usermail,
-          password: password
-     }
-     axios
-     .post(url, data)
-     .then(res => {
-          console.log("log in action exitoso hasta ahora");
-          console.log(res);
-          token = res.token;
-     })
-     .catch(error => {
-          console.log(error.response.statusText);
-     });
-     return {
-      type: FETCH_USER,
-      payload: {token: token}
-  }
+export function UserLoginOk(token) {
+  return {
+    type: 'USER_LOGIN_OK',
+    payload: { token: token }
+  };
+}
+
+export function UserLoginError() {
+  return {
+    type: 'USER_LOGIN_ERROR'
+  };
+}
+
+export function UserLogOut() {
+  return {
+    type: 'USER_LOGOUT'
+  };
 }

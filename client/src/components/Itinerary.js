@@ -1,7 +1,7 @@
-import React from "react";
-import "../styles/Itinerary.css";
+import React from 'react';
+import '../styles/Itinerary.css';
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
 import Comment from './Comment';
@@ -9,7 +9,7 @@ import Comment from './Comment';
 const HashTagList = props => {
   return props.hashtags.map(hashtag => {
     return (
-      <li key={hashtag} className="hashTagList">
+      <li key={hashtag} className='hashTagList'>
         #{hashtag}
       </li>
     );
@@ -18,18 +18,17 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
-    return this.props.comments.map((comment) => {
-      return (  
-      <li className="commentElement" key={comment}>
-        <Comment text={comment} />
-      </li>
-      )
+    return this.props.comments.map(comment => {
+      return (
+        <li className='commentElement' key={comment}>
+          <Comment text={comment} />
+        </li>
+      );
     });
   }
 }
 
 class Itinerary extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -41,10 +40,10 @@ class Itinerary extends React.Component {
   }
 
   componentDidMount() {
-    this.props.onRef(this)
+    this.props.onRef(this);
   }
   componentWillUnmount() {
-    this.props.onRef(undefined)
+    this.props.onRef(undefined);
   }
 
   closeView() {
@@ -61,7 +60,7 @@ class Itinerary extends React.Component {
     this.setState({
       isOpen: !this.state.isOpen
     });
-  }
+  };
 
   handleClickOpen(e) {
     e.preventDefault();
@@ -77,19 +76,19 @@ class Itinerary extends React.Component {
 
   render() {
     return (
-      <div className="itineraryContainer">
-        <div className="itineraryCardContainer">
-          <div className="itineraryCard">
-            <figure className="authorImage">
+      <div className='itineraryContainer'>
+        <div className='itineraryCardContainer'>
+          <div className='itineraryCard'>
+            <figure className='authorImage'>
               <img
                 src={this.props.itinerary.profilePic}
                 alt={this.props.itinerary.authorName}
               />
               <figcaption>{this.props.itinerary.authorName}</figcaption>
             </figure>
-            <div className="itineraryBody">
+            <div className='itineraryBody'>
               <h3>{this.props.itinerary.title}</h3>
-              <div className="itineraryInfo">
+              <div className='itineraryInfo'>
                 <h4>Likes: {this.props.itinerary.rating}</h4>
                 <h4>{this.props.itinerary.duration} hours</h4>
                 <h4>$${this.props.itinerary.price}</h4>
@@ -100,20 +99,23 @@ class Itinerary extends React.Component {
             </div>
           </div>
           <div>
-            <a className={this.state.isOpen ? "invisible" : "viewAllBar"} onClick={this.handleClickOpen}>
+            <a
+              className={this.state.isOpen ? 'invisible' : 'viewAllBar'}
+              onClick={this.handleClickOpen}
+            >
               <span>⮟ view all ⮟</span>
             </a>
           </div>
           <Collapse isOpen={this.state.isOpen}>
-            <div className="activitiesListCarousel">
+            <div className='activitiesListCarousel'>
               <h5>Activities: </h5>
               <ActivitiesCarousel activities={this.props.activities} />
               <h5>Comments:</h5>
               <ul>
-                <CommentsList comments={this.props.comments}/>
+                <CommentsList comments={this.props.comments} />
               </ul>
             </div>
-            <a className="viewAllBar" onClick={this.handleClickClose}>
+            <a className='viewAllBar' onClick={this.handleClickClose}>
               <span>⮝ close ⮝</span>
             </a>
           </Collapse>
@@ -127,17 +129,14 @@ const mapStateToProps = state => {
   return {
     activities: state.activitiesReducer.activities,
     pending: state.activitiesReducer.pending,
-    error: state.activitiesReducer.error,
+    error: state.activitiesReducer.error
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchActivities: (idItinerary) => dispatch(fetchActivitiesAction(idItinerary))
+    fetchActivities: idItinerary => dispatch(fetchActivitiesAction(idItinerary))
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Itinerary);
+export default connect(mapStateToProps, mapDispatchToProps)(Itinerary);
