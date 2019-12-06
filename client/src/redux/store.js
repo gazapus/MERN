@@ -3,6 +3,7 @@ import citiesReducer from './reducers/cityReducer';
 import itinerariesReducer from './reducers/itinerariesReducers';
 import activitiesReducer from './reducers/activitiesReducer';
 import loginReducer from './reducers/loginReducer';
+import registerReducer from './reducers/registerReducer';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
@@ -17,7 +18,8 @@ const reducers = combineReducers({
   citiesReducer,
   itinerariesReducer,
   activitiesReducer,
-  loginReducer
+  loginReducer,
+  registerReducer
 });
 
 const persistConfig = {

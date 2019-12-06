@@ -10,7 +10,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 var ObjectID = require('mongodb').ObjectID;
-const { check, validationResult } = require('express-validator');
+//const { check, validationResult } = require('express-validator');
 
 const port = process.env.PORT || 5000;
 app.listen(port);
@@ -30,7 +30,7 @@ mongoose.connect(
 );
 
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function() {
   console.log('conectado a base de datos');
 });
@@ -103,7 +103,7 @@ app.get('/users/all', (req, res) => {
     res.send(users);
   });
 });
-
+/*
 app.post(
   '/users/register',
   //Verificación que los datos se hayan ingresado sean correctos
@@ -115,124 +115,77 @@ app.post(
     check('name')
       .not()
       .isEmpty()
-      .withMessage('must not be empty name')
-  ],
-  (req, response, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return response.status(422).json({ errors: errors.array() });
-    }
-    //Verificar que el usuario no existe mediante su email
-    db.collection('users')
-      .find({ email: req.body.email })
-      .toArray((err, results) => {
-        if (err) {
-          return console.error(err);
-        }
-        if (!results.length) {
-          //Se crea y guarda el usuario nuevo
-          var salt = bcrypt.genSaltSync(10);
-          var hash = bcrypt.hashSync(req.body.password, salt);
-          var newUser = new User({
-            name: req.body.name,
-            email: req.body.email,
-            password: hash,
-            url: req.body.url
-          });
-          newUser.save(function(err, res) {
-            if (err) {
-              console.log(err);
-              response.status(500).send('Something broke!');
-            }
-            response.send(res);
-          });
-        } else {
-          response.statusMessage = 'Existe un usuario con este email';
-          console.log('error 400');
-          response.status(500).send('Something broke!');
-        }
-      });
+      .withMessage('must not be empty name')]
+  */
+
+app.post('/users/register', async (req, response) => {
+  const userExists = await db
+    .collection('users')
+    .findOne({ username: req.body.username });
+  const emailExists = await db
+    .collection('users')
+    .findOne({ email: req.body.email });
+  if (userExists) {
+    console.log('usuario existe');
+    return response.status(500).send('Username already exists');
   }
-);
-
-app.post(
-  '/users/register2', (req, response) => {
-    db.collection('users')
-      .find({ email: req.body.email })
-      .toArray((error, results) => {
-        //Check if there an error in the server
-        if (error) {
-          response.status(500).send('Sorry, internal error :(');
-        }
-        //Check if the email already exists
-        if (results.length) {
-          response.status(500).send('User already exist!');
-        }else{
-          var salt = bcrypt.genSaltSync(10);
-          var hash = bcrypt.hashSync(req.body.password, salt);
-          var newUser = new User({
-            username: req.body.username,
-            email: req.body.email,
-            password: hash,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            country: req.body.country,
-            photoURL: req.body.photoURL
-          });
-          newUser.save(function(err, res) {
-            if (err) {
-              response.status(500).send(err.message);
-            }
-            response.send(res);
-          });
-        } 
-      })
+  if (emailExists) {
+    console.log('email existe');
+    return response.status(500).send('Email account already exists');
+  }
+  var salt = bcrypt.genSaltSync(10);
+  var hash = bcrypt.hashSync(req.body.password, salt);
+  var newUser = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: hash,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    country: req.body.country,
+    photoURL: req.body.photoURL
   });
+  newUser.save(function(err, res) {
+    if (err) {
+      return response.status(500).send('The user cant be saved');
+    }
+    return response.send(res);
+  });
+});
 
-app.post('/users/login', (req, res) => {
-  db.collection('users')
-    .find({ email: req.body.email })
-    .toArray((err, results) => {
-      if (err) {
-        return console.error(err);
-      }
-      if (results.length) {
-        console.log('usuario encontrado');
-        let passwordMatch = bcrypt.compareSync(
-          req.body.password,
-          results[0].password
-        );
-        if (passwordMatch) {
-          const payload = {
-            id: results[0]._id,
-            name: results[0].name,
-            email: results[0].email,
-            avatarPicture: results[0].url,
-            isOnline: results[0].isOnline
-          };
-          const options = { expiresIn: 2592000 };
-          jwt.sign(payload, 'secret', options, (err, token) => {
-            if (err) {
-              res.json({
-                success: false,
-                token: 'There was an error'
-              });
-            } else {
-              res.json({
-                success: true,
-                token: token
-              });
-            }
-          });
-        } else {
-          console.log('contraseña incorrecta');
-          res.status(500).send('password doesnt match!');
-        }
-      } else {
-        console.log('no encontrado');
-        res.status(500).send('That user doesnt exists!');
-      }
-    });
+app.post('/users/login', async (req, res) => {
+  const user = await db
+    .collection('users')
+    .findOne({ username: req.body.username });
+  if (!user) {
+    return res.status(500).send('Username not found!');
+  }
+  let passwordMatch = bcrypt.compareSync(req.body.password, user.password);
+  if (!passwordMatch) {
+    return res.status(500).send('Password wrong');
+  }
+  const payload = {
+    id: user._id,
+    email: user.email,
+    username: user.username,
+    lastName: user.lastName,
+    firstName: user.firstName,
+    country: user.country,
+    photoURL: user.photoURL
+  };
+  const options = { expiresIn: 2592000 };
+  jwt.sign(payload, 'secret', options, (err, token) => {
+    if (err) {
+      res.json({
+        success: false,
+        token: 'Error token process'
+      });
+    } else {
+      res.json({
+        success: true,
+        token: token
+      });
+    }
+  });
 });
 
 router.get(
