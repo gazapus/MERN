@@ -1,7 +1,9 @@
 import React from "react";
 import NavButton from "./NavBotton";
 import HomeIcon from "../images/home.svg";
+import AvatarEmpty from "../images/avatarempty.png";
 import axios from "axios";
+import isImageUrl from "is-image-url";
 import "../styles/SignUp.css";
 
 class CountryList extends React.Component {
@@ -31,7 +33,7 @@ class CountryList extends React.Component {
     return (
       this.state.countries.map( country => {
         return (
-          <option value={country} selected>{country}</option>
+          <option value={country} key={country}>{country}</option>
         )
       })
     );
@@ -42,6 +44,7 @@ class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      photoBuffer: "https://www.polevo.fr/assets/user_logo-51f4909c1b682e440bcf97756f60ab4c4531cf6dc6bfdf730ca0fa7fee1112e1.png",
       photoURL: "",
       username: "",
       password: "",
@@ -55,11 +58,17 @@ class SignUp extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
+    this.updatePhoto = this.updatePhoto.bind(this);
   }
 
   submit(event) {
     event.preventDefault();
-    console.log("evento enviado")
+    if(! isImageUrl(this.state.photoURL)){
+      this.setState({
+        errorMessage: "La url no corresponde a una imagen"
+      });
+      return;
+    }
     var url = "http://localhost:5000/users/register";
     var data = {
       name: this.state.name,
@@ -88,14 +97,16 @@ class SignUp extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  componentDidMount() {
-    fetch('https://restcountries.eu/rest/v2/all').then(response => {
-      response.json().then(res => {
-        for (let i = 0; i < 10; i++) {
-          console.log(res[i].name);
-        }
+  updatePhoto(){
+    if(isImageUrl(this.state.photoURL)){
+      this.setState({
+        photoBuffer: this.state.photoURL
       });
-    })
+    }else{
+      this.setState({
+        photoBuffer: "https://www.polevo.fr/assets/user_logo-51f4909c1b682e440bcf97756f60ab4c4531cf6dc6bfdf730ca0fa7fee1112e1.png"
+      });
+    }
   }
 
   render() {
@@ -116,18 +127,19 @@ class SignUp extends React.Component {
           <h2>Create Acoount</h2>
           <form onSubmit={this.submit}>
             <div id="photo">
-              <img
-                src="https://ak2.picdn.net/shutterstock/videos/32613832/thumb/1.jpg"
-                alt="imagen"
+              <img 
+                src={this.state.photoBuffer}
+                alt="no image"
               />
             </div>
             <label htmlFor="photoURL" className="labelInput">
               <span>Photo URL:</span>
               <input
-                name="url"
+                name="photoURL"
                 id="photoURL"
                 type="url"
                 onChange={this.handleChange}
+                onBlur={this.updatePhoto}
               />
             </label>
             <label htmlFor="username" className="labelInput">
@@ -181,9 +193,9 @@ class SignUp extends React.Component {
                 required
               />
             </label>
-            <label className="labelInput">
+            <label htmlFor="country" className="labelInput">
               <span>Country:</span>
-              <select name="countries">
+              <select name="country" onChange={this.handleChange}>
                 <CountryList />
               </select>
             </label>
@@ -192,8 +204,8 @@ class SignUp extends React.Component {
                 type="checkbox"
                 name="agreeTerms"
                 value={"false" === this.state.agreeTerms}
-                required
                 onChange={this.handleChange}
+                required
               />
               I agree to MYtinerary
               <a href="#">Terms and Conditions</a>

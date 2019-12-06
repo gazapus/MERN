@@ -45,11 +45,12 @@
   margin-right: 2%;
   width: 24%;
 }
-.labelInput input{
+.labelInput input, .labelInput select{
   width: 71%; 
   border-radius: 7px;
   height: 6vh;
 }
+
 #agreeTerms{
   font-size: 3vmin;
   margin: 3%;

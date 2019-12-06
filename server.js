@@ -9,7 +9,6 @@ const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-//const key = require("<path to your config file>");
 var ObjectID = require('mongodb').ObjectID;
 const { check, validationResult } = require('express-validator');
 
@@ -155,6 +154,40 @@ app.post(
       });
   }
 );
+
+app.post(
+  '/users/register2', (req, response) => {
+    db.collection('users')
+      .find({ email: req.body.email })
+      .toArray((error, results) => {
+        //Check if there an error in the server
+        if (error) {
+          response.status(500).send('Sorry, internal error :(');
+        }
+        //Check if the email already exists
+        if (results.length) {
+          response.status(500).send('User already exist!');
+        }else{
+          var salt = bcrypt.genSaltSync(10);
+          var hash = bcrypt.hashSync(req.body.password, salt);
+          var newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            password: hash,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            country: req.body.country,
+            photoURL: req.body.photoURL
+          });
+          newUser.save(function(err, res) {
+            if (err) {
+              response.status(500).send(err.message);
+            }
+            response.send(res);
+          });
+        } 
+      })
+  });
 
 app.post('/users/login', (req, res) => {
   db.collection('users')
