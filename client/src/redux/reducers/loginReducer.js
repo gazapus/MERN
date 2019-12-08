@@ -18,7 +18,7 @@ function loginReducer(state = defaultState, action) {
       return {
         ...state,
         success: false,
-        errorMessage: 'ERROR AL LOGUARSE',
+        errorMessage: action.payload.error,
         token: ''
       };
     case 'USER_LOGOUT':

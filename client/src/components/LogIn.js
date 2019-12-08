@@ -3,16 +3,16 @@ import NavButton from './NavBotton';
 import HomeIcon from '../images/home.svg';
 import { fetchLogIn, UserLogOut } from '../redux/actions/loginAction';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
 import '../styles/LogIn.css';
-
-import jwt_decode from 'jwt-decode';
 
 class LogIn extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      password: ''
+      username: '',
+      password: '',
+      remember: "false"
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
@@ -20,9 +20,7 @@ class LogIn extends React.Component {
 
   submit(event) {
     event.preventDefault();
-    console.log('evento enviado');
-    console.log(this.props);
-    this.props.fetchLogin(this.state.email, this.state.password);
+    this.props.fetchLogin(this.state.username, this.state.password);
   }
 
   handleChange(event) {
@@ -32,10 +30,9 @@ class LogIn extends React.Component {
   render() {
     let errorMessage;
     if (this.props.errorMessage) {
-      errorMessage = <h5 id='errorMessage'>{this.state.errorMessage}</h5>;
+      errorMessage = <h5 id='errorMessage'>{this.props.errorMessage}</h5>;
     }
     if (this.props.success) {
-      console.log(jwt_decode(this.props.token));
       return (
         <div id='logInContainer'>
           <div id='logInBody'>
@@ -51,30 +48,52 @@ class LogIn extends React.Component {
     return (
       <div id='logInContainer'>
         <div id='logInBody'>
-          <h2>Log In</h2>
+          <h2>Login</h2>
           <form onSubmit={this.submit}>
-            <label htmlFor='email'>Email:</label>
-            <input
-              name='email'
-              id='email'
-              type='email'
-              onChange={this.handleChange}
-              required
-            />
-            <label htmlFor='password'>Password:</label>
-            <input
-              minLength='8'
-              name='password'
-              id='password'
-              type='password'
-              onChange={this.handleChange}
-              required
-            />
+            <label htmlFor='username' className="labelInput">
+              <span>Username: </span>
+              <input
+                name='username'
+                id='username'
+                type='text'
+                onChange={this.handleChange}
+                required
+              />
+            </label>
+            <label htmlFor='password'className="labelInput">
+              <span>Password: </span>
+              <input
+                minLength='8'
+                name='password'
+                id='password'
+                type='password'
+                onChange={this.handleChange}
+                required
+              />
+            </label>
+            <label htmlFor='remember' id="rememberMe">
+              <input
+                type='checkbox'
+                name='remember'
+                value={'false' === this.state.remember}
+                onChange={this.handleChange}
+              />
+              <span>Remember me </span>
+            </label>
             <label id='buttonContainer'>
-              <input type='submit' value='Log in' />
+              <input type='submit' value='OK' />
             </label>
           </form>
           {errorMessage}
+          <div id="toCreateAccount">
+            <p>
+              Dont have a MYtinerary account yet?<br/>
+              You should create one! It's totally free and only takes a minute
+            </p>
+            <Link to="/SignIn">
+              Create Account
+            </Link>
+          </div>
         </div>
         <NavButton link='/' alt='home' img={HomeIcon} />
       </div>

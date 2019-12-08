@@ -6,7 +6,7 @@
     border-radius: 100% !important;
     height: 10vw;
     width: 10vw;
-    background-image: url('../images/login.png');
+    background-image: var(--avatarURL);
     background-repeat: no-repeat;
     background-position: center;
     color: yellow !important;
@@ -17,4 +17,7 @@
         width: 5vw;
         height: 5vw;
     }
+}
+:root{
+    --avatarURL: url('https://www.polevo.fr/assets/user_logo-51f4909c1b682e440bcf97756f60ab4c4531cf6dc6bfdf730ca0fa7fee1112e1.png');
 }

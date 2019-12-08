@@ -102,6 +102,7 @@ class Itinerary extends React.Component {
             <a
               className={this.state.isOpen ? 'invisible' : 'viewAllBar'}
               onClick={this.handleClickOpen}
+              href="#"
             >
               <span>⮟ view all ⮟</span>
             </a>

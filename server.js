@@ -161,7 +161,7 @@ app.post('/users/login', async (req, res) => {
   }
   let passwordMatch = bcrypt.compareSync(req.body.password, user.password);
   if (!passwordMatch) {
-    return res.status(500).send('Password wrong');
+    return res.status(500).send('Password doesnt match');
   }
   const payload = {
     id: user._id,
@@ -177,7 +177,7 @@ app.post('/users/login', async (req, res) => {
     if (err) {
       res.json({
         success: false,
-        token: 'Error token process'
+        token: 'Error with the token'
       });
     } else {
       res.json({
@@ -201,3 +201,12 @@ router.get(
       .catch(err => res.status(404).json({ error: 'User does not exist!' }));
   }
 );
+
+app.delete('/users/clear', (req, res) => {
+  User.deleteMany({}, function (err) {
+    if (err) 
+      return handleError(err);
+    else 
+      return res.send("all deleted");
+  });
+})

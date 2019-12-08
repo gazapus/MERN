@@ -1,36 +1,41 @@
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
 
-export function fetchLogIn(usermail, password) {
+export function fetchLogIn(_username, _password) {
   return dispatch => {
     var url = 'http://localhost:5000/users/login';
     var data = {
-      email: usermail,
-      password: password
+      username: _username,
+      password: _password
     };
     axios
       .post(url, data)
       .then(res => {
-        console.log('log in action exitoso hasta ahora');
-        console.log(res);
         dispatch(UserLoginOk(res.data.token));
       })
       .catch(error => {
-        console.log(error.response.statusText);
-        dispatch(UserLoginError());
+        console.log(error);
+        dispatch(UserLoginError(error.response.data));
       });
   };
 }
 
 export function UserLoginOk(token) {
+  let decoded = jwt_decode(token);
   return {
     type: 'USER_LOGIN_OK',
-    payload: { token: token }
+    payload: { 
+      token: token,
+      avatarURL: decoded.photoURL,
+      username: decoded.username
+     }
   };
 }
 
-export function UserLoginError() {
+export function UserLoginError(error) {
   return {
-    type: 'USER_LOGIN_ERROR'
+    type: 'USER_LOGIN_ERROR',
+    payload: {error: error}
   };
 }
 
