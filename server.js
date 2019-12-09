@@ -31,19 +31,19 @@ mongoose.connect(
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
-db.once('open', function() {
+db.once('open', function () {
   console.log('conectado a base de datos');
 });
 
 app.get('/getCities', (req, res) => {
-  City.find(function(err, cities) {
+  City.find(function (err, cities) {
     if (err) return console.error(err);
     res.send(cities);
   });
 });
 
 app.get('/getItineraries', (req, res) => {
-  Itinerary.find(function(err, itineraries) {
+  Itinerary.find(function (err, itineraries) {
     if (err) return console.error(err);
     res.send(itineraries);
   });
@@ -98,7 +98,7 @@ app.get('/activitiesByitinerary/:itineraryId', (req, res) => {
 });
 
 app.get('/users/all', (req, res) => {
-  User.find(function(err, users) {
+  User.find(function (err, users) {
     if (err) return console.error(err);
     res.send(users);
   });
@@ -119,12 +119,12 @@ app.post(
   */
 
 app.post('/users/register', async (req, response) => {
-  let userExist = await User.findOne({username: req.body.username});
-  if(userExist){
+  let userExist = await User.findOne({ username: req.body.username });
+  if (userExist) {
     return response.status(500).send('Username is already being used');
   }
-  let emailExist = await User.findOne({email: req.body.email});
-  if(emailExist){
+  let emailExist = await User.findOne({ email: req.body.email });
+  if (emailExist) {
     return response.status(500).send('Email is already being used for another account');
   }
   var newUser = new User({
@@ -137,7 +137,7 @@ app.post('/users/register', async (req, response) => {
     photoURL: req.body.photoURL,
     isOnline: false
   });
-  newUser.save(function(err, res) {
+  newUser.save(function (err, res) {
     if (err) {
       return response.status(500).send('The user cant be saved');
     }
@@ -146,8 +146,8 @@ app.post('/users/register', async (req, response) => {
 });
 
 app.post('/users/login', async (req, res) => {
-  let user = await User.findOne({username: req.body.username});
-  if(!user){
+  let user = await User.findOne({ username: req.body.username });
+  if (!user) {
     return res.status(500).send('User doesnt exist');
   }
   let passwordMatch = bcrypt.compareSync(req.body.password, user.password);
@@ -156,11 +156,7 @@ app.post('/users/login', async (req, res) => {
   }
   const payload = {
     id: user._id,
-    email: user.email,
     username: user.username,
-    lastName: user.lastName,
-    firstName: user.firstName,
-    country: user.country,
     photoURL: user.photoURL
   };
   const options = { expiresIn: 2592000 };
@@ -171,46 +167,46 @@ app.post('/users/login', async (req, res) => {
         token: 'Error with the token'
       });
     } else {
-      await user.updateOne({isOnline: true});
+      await user.updateOne({ isOnline: true });
       res.json({
         success: true,
         token: token
       })
     }
-    })
-  });
- 
+  })
+});
+
 
 app.put('/users/logout',
-  passport.authenticate('jwt', {session: false}),
+  passport.authenticate('jwt', { session: false }),
   (req, res) => {
-      User.findByIdAndUpdate(
-        req.user._id, 
-        {isOnline: 'false'}, 
-        {new: true}, 
-        (err, user) => {
-          if(err){
-            return res.status(500).send(err);
-          }
-          res.send(user);
+    User.findByIdAndUpdate(
+      req.user._id,
+      { isOnline: 'false' },
+      { new: true },
+      (err, user) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+        res.send(user);
       });
   }
 );
 
 app.delete('/users/clear', (req, res) => {
   User.deleteMany({}, function (err) {
-    if (err) 
+    if (err)
       return handleError(err);
-    else 
+    else
       return res.send("all deleted");
   });
 });
 
 app.delete('/users/delete', async (req, res) => {
-  let userDeleted = await User.deleteOne({username: req.body.username});
-  if(userDeleted.deletedCount > 0){
+  let userDeleted = await User.deleteOne({ username: req.body.username });
+  if (userDeleted.deletedCount > 0) {
     res.send("user deleted");
-  }else{
+  } else {
     res.status(500).send("Cant be deleted");
   }
 });
@@ -218,7 +214,7 @@ app.delete('/users/delete', async (req, res) => {
 router.get(
   '/test',
   passport.authenticate('jwt', { session: false }),
-  (req, res) => {  
+  (req, res) => {
     db.collection('users')
       .findOne({ _id: req.user._id })
       .then(user => {
@@ -228,3 +224,12 @@ router.get(
   }
 );
 
+app.get('/users/profile',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    User.findById(req.user._id, (err, user) => {
+      if (err) return res.status(500).send('Error to get data from the data base');
+      return res.send(user);
+    })
+  }
+);
