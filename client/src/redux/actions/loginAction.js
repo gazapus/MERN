@@ -25,8 +25,8 @@ export function fetchLogout(token) {
     var url = 'http://localhost:5000/users/logout';
     var data = {
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": "bearer " + token
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'bearer ' + token
       }
     };
     axios
@@ -66,8 +66,9 @@ export function UserLogoutError(error) {
   };
 }
 
-export function UserLoginError() {
+export function UserLoginError(error) {
   return {
-    type: 'USER_LOGIN_ERROR'
+    type: 'USER_LOGIN_ERROR',
+    payload: { error: error }
   };
 }

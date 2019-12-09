@@ -3,8 +3,9 @@ import NavButton from './NavBotton';
 import HomeIcon from '../images/home.svg';
 import { fetchLogIn, fetchLogout } from '../redux/actions/loginAction';
 import { connect } from 'react-redux';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../styles/LogIn.css';
+import { Redirect } from 'react-router-dom';
 
 class LogIn extends React.Component {
   constructor(props) {
@@ -12,11 +13,21 @@ class LogIn extends React.Component {
     this.state = {
       username: '',
       password: '',
-      remember: "false"
+      remember: 'false'
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
     this.closeSession = this.closeSession.bind(this);
+    this.handleGoogleButton = this.handleGoogleButton.bind(this);
+  }
+
+  handleGoogleButton() {
+    console.log('google');
+    fetch('http://localhost:5000/users/google')
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
   }
 
   submit(event) {
@@ -28,8 +39,9 @@ class LogIn extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
 
-  closeSession(){
+  closeSession() {
     this.props.logOut(this.props.token);
+    return <Redirect to='/' />;
   }
 
   render() {
@@ -38,24 +50,15 @@ class LogIn extends React.Component {
       errorMessage = <h5 id='errorMessage'>{this.props.errorMessage}</h5>;
     }
     if (this.props.success) {
-      return (
-        <div id='logInContainer'>
-          <div id='logInBody'>
-            <div id='logInSuccefullMessage'>
-              <h2>Welcome back</h2>
-            </div>
-            <button onClick={this.closeSession}>salir</button>
-          </div>
-          <NavButton link='/' alt='home' img={HomeIcon} />
-        </div>
-      );
+      return <Redirect to='/' />;
     }
+
     return (
       <div id='logInContainer'>
         <div id='logInBody'>
           <h2>Login</h2>
           <form onSubmit={this.submit}>
-            <label htmlFor='username' className="labelInput">
+            <label htmlFor='username' className='labelInput'>
               <span>Username: </span>
               <input
                 name='username'
@@ -65,7 +68,7 @@ class LogIn extends React.Component {
                 required
               />
             </label>
-            <label htmlFor='password'className="labelInput">
+            <label htmlFor='password' className='labelInput'>
               <span>Password: </span>
               <input
                 minLength='8'
@@ -76,7 +79,7 @@ class LogIn extends React.Component {
                 required
               />
             </label>
-            <label htmlFor='remember' id="rememberMe">
+            <label htmlFor='remember' id='rememberMe'>
               <input
                 type='checkbox'
                 name='remember'
@@ -90,15 +93,16 @@ class LogIn extends React.Component {
             </label>
           </form>
           {errorMessage}
-          <div id="toCreateAccount">
+          <div id='toCreateAccount'>
             <p>
-              Dont have a MYtinerary account yet?<br/>
+              Dont have a MYtinerary account yet?
+              <br />
               You should create one! It's totally free and only takes a minute
             </p>
-            <Link to="/SignIn">
-              Create Account
-            </Link>
+            <Link to='/SignIn'>Create Account</Link>
           </div>
+          <a id='googleButton' href='http://localhost:5000/users/google' />
+          {/*<button id='googleButton' onClick={this.handleGoogleButton} />*/}
         </div>
         <NavButton link='/' alt='home' img={HomeIcon} />
       </div>
@@ -117,7 +121,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchLogin: (a, b) => dispatch(fetchLogIn(a, b)),
-    logOut: (token) => dispatch(fetchLogout(token))
+    logOut: token => dispatch(fetchLogout(token))
   };
 };
 

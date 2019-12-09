@@ -22,8 +22,17 @@ app.use('/', router);
 
 //passport middleware
 app.use(passport.initialize());
-require('./passport');
+app.use(passport.session()); //*????????????????????
 
+require('./passport');
+require('./passportGoogle');
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
 mongoose.connect(
   'mongodb+srv://cristian:abcd1234@cluster0-jc6tk.mongodb.net/test?retryWrites=true&w=majority',
   { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'cities' }
@@ -31,19 +40,19 @@ mongoose.connect(
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
-db.once('open', function () {
+db.once('open', function() {
   console.log('conectado a base de datos');
 });
 
 app.get('/getCities', (req, res) => {
-  City.find(function (err, cities) {
+  City.find(function(err, cities) {
     if (err) return console.error(err);
     res.send(cities);
   });
 });
 
 app.get('/getItineraries', (req, res) => {
-  Itinerary.find(function (err, itineraries) {
+  Itinerary.find(function(err, itineraries) {
     if (err) return console.error(err);
     res.send(itineraries);
   });
@@ -98,7 +107,7 @@ app.get('/activitiesByitinerary/:itineraryId', (req, res) => {
 });
 
 app.get('/users/all', (req, res) => {
-  User.find(function (err, users) {
+  User.find(function(err, users) {
     if (err) return console.error(err);
     res.send(users);
   });
@@ -125,7 +134,9 @@ app.post('/users/register', async (req, response) => {
   }
   let emailExist = await User.findOne({ email: req.body.email });
   if (emailExist) {
-    return response.status(500).send('Email is already being used for another account');
+    return response
+      .status(500)
+      .send('Email is already being used for another account');
   }
   var newUser = new User({
     username: req.body.username,
@@ -137,7 +148,7 @@ app.post('/users/register', async (req, response) => {
     photoURL: req.body.photoURL,
     isOnline: false
   });
-  newUser.save(function (err, res) {
+  newUser.save(function(err, res) {
     if (err) {
       return response.status(500).send('The user cant be saved');
     }
@@ -171,13 +182,13 @@ app.post('/users/login', async (req, res) => {
       res.json({
         success: true,
         token: token
-      })
+      });
     }
-  })
+  });
 });
 
-
-app.put('/users/logout',
+app.put(
+  '/users/logout',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     User.findByIdAndUpdate(
@@ -189,47 +200,58 @@ app.put('/users/logout',
           return res.status(500).send(err);
         }
         res.send(user);
-      });
+      }
+    );
   }
 );
 
 app.delete('/users/clear', (req, res) => {
-  User.deleteMany({}, function (err) {
-    if (err)
-      return handleError(err);
-    else
-      return res.send("all deleted");
+  User.deleteMany({}, function(err) {
+    if (err) return handleError(err);
+    else return res.send('all deleted');
   });
 });
 
 app.delete('/users/delete', async (req, res) => {
   let userDeleted = await User.deleteOne({ username: req.body.username });
   if (userDeleted.deletedCount > 0) {
-    res.send("user deleted");
+    res.send('user deleted');
   } else {
-    res.status(500).send("Cant be deleted");
+    res.status(500).send('Cant be deleted');
   }
 });
 
-router.get(
-  '/test',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    db.collection('users')
-      .findOne({ _id: req.user._id })
-      .then(user => {
-        res.json(user);
-      })
-      .catch(err => res.status(404).json({ error: 'User does not exist!' }));
-  }
-);
-
-app.get('/users/profile',
+app.get(
+  '/users/profile',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
     User.findById(req.user._id, (err, user) => {
-      if (err) return res.status(500).send('Error to get data from the data base');
+      if (err)
+        return res.status(500).send('Error to get data from the data base');
       return res.send(user);
-    })
+    });
   }
 );
+
+app.get(
+  '/users/google',
+  passport.authenticate('google', { scope: ['profile'] })
+);
+
+app.get(
+  '/users/google/redirect',
+  passport.authenticate('google', { failureRedirect: '/mal' }),
+  (req, res) => {
+    res.redirect('/bien');
+  }
+);
+
+app.get('/mal', (req, res) => {
+  console.log('mal');
+  return res.send('mal');
+});
+
+app.get('/bien', (req, res) => {
+  console.log('bien');
+  return res.send('bien');
+});

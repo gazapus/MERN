@@ -9,7 +9,6 @@ const defaultState = {
 function loginReducer(state = defaultState, action) {
   switch (action.type) {
     case 'USER_LOGIN_OK':
-      console.log(action.payload.token);
       return {
         ...state,
         success: true,
@@ -36,10 +35,10 @@ function loginReducer(state = defaultState, action) {
         username: ''
       };
     case 'USER_LOGOUT_ERROR':
-      alert("Error to logout");
+      alert('Error to logout');
       return {
-        ...state,
-        }
+        ...state
+      };
     default:
       return state;
   }
