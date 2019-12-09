@@ -2,7 +2,8 @@ import React from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
-import jwt_decode from 'jwt-decode';
+import { fetchLogout } from '../redux/actions/loginAction';
+
 import '../styles/AccountMenu.css';
 
 class AccountMenu extends React.Component {
@@ -13,6 +14,7 @@ class AccountMenu extends React.Component {
       dropdownOpen: false
     };
     this.setOpen = this.setOpen.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   setOpen(value) {
@@ -23,21 +25,33 @@ class AccountMenu extends React.Component {
 
   toggle = () => this.setOpen(!this.state.dropdownOpen);
 
-  render() {
-    console.log(jwt_decode(this.props.token));
-    let root = document.documentElement;
-    let decodedAvatarURL = jwt_decode(this.props.token).photoURL;
-    if(decodedAvatarURL){
-      let avatarURLString = 'url(\'' + decodedAvatarURL + '\')';
-      console.log(avatarURLString);
-      root.style.setProperty('--avatarURL', avatarURLString);
-    }else{
-      root.style.setProperty('--avatarURL', "url(''https://www.polevo.fr/assets/user_logo-51f4909c1b682e440bcf97756f60ab4c4531cf6dc6bfdf730ca0fa7fee1112e1.png')");
-    }
+  logout(){
+    this.props.logOut(this.props.token);
+  }
 
-    return (
-      <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle} className="bottonDropdown">
-        <DropdownToggle className="dropdownToggleLogIn" />
+  render() {
+    var avatarURLCSSProperty = this.props.avatarURL ? 'url(\'' + this.props.avatarURL + '\')' : "url('https://bit.ly/2DZmiwk')";
+    let root = document.documentElement;
+    root.style.setProperty('--avatarURL', avatarURLCSSProperty);
+
+    let items;
+    if (this.props.username) {
+      items =
+        <DropdownMenu>
+          <DropdownItem header>{this.props.username}</DropdownItem>
+          <DropdownItem>
+            <Link to="/Profile" className="d-flex justify-content-center">
+              My Profile
+          </Link>
+          </DropdownItem>
+          <DropdownItem onClick={this.logout}>
+            <Link to="/" className="d-flex justify-content-center">
+              Logout
+            </Link>
+          </DropdownItem>
+        </DropdownMenu>
+    } else {
+      items =
         <DropdownMenu>
           <DropdownItem>
             <Link to="/LogIn" className="d-flex justify-content-center">
@@ -50,6 +64,12 @@ class AccountMenu extends React.Component {
           </Link>
           </DropdownItem>
         </DropdownMenu>
+    }
+
+    return (
+      <ButtonDropdown isOpen={this.state.dropdownOpen} toggle={this.toggle} className="bottonDropdown">
+        <DropdownToggle className="dropdownToggleLogIn" />
+        {items}
       </ButtonDropdown>
     );
   }
@@ -57,11 +77,19 @@ class AccountMenu extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    token: state.loginReducer.token
+    token: state.loginReducer.token,
+    avatarURL: state.loginReducer.avatarURL,
+    username: state.loginReducer.username
   };
 };
 
-export default connect(mapStateToProps)(AccountMenu);
+const mapDispatchToProps = dispatch => {
+  return {
+    logOut: (token) => dispatch(fetchLogout(token))
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountMenu);
 
 
 //export default AccountMenu;

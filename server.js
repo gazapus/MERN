@@ -119,30 +119,23 @@ app.post(
   */
 
 app.post('/users/register', async (req, response) => {
-  const userExists = await db
-    .collection('users')
-    .findOne({ username: req.body.username });
-  const emailExists = await db
-    .collection('users')
-    .findOne({ email: req.body.email });
-  if (userExists) {
-    console.log('usuario existe');
-    return response.status(500).send('Username already exists');
+  let userExist = await User.findOne({username: req.body.username});
+  if(userExist){
+    return response.status(500).send('Username is already being used');
   }
-  if (emailExists) {
-    console.log('email existe');
-    return response.status(500).send('Email account already exists');
+  let emailExist = await User.findOne({email: req.body.email});
+  if(emailExist){
+    return response.status(500).send('Email is already being used for another account');
   }
-  var salt = bcrypt.genSaltSync(10);
-  var hash = bcrypt.hashSync(req.body.password, salt);
   var newUser = new User({
     username: req.body.username,
     email: req.body.email,
-    password: hash,
+    password: req.body.password,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     country: req.body.country,
-    photoURL: req.body.photoURL
+    photoURL: req.body.photoURL,
+    isOnline: false
   });
   newUser.save(function(err, res) {
     if (err) {
@@ -153,11 +146,9 @@ app.post('/users/register', async (req, response) => {
 });
 
 app.post('/users/login', async (req, res) => {
-  const user = await db
-    .collection('users')
-    .findOne({ username: req.body.username });
-  if (!user) {
-    return res.status(500).send('Username not found!');
+  let user = await User.findOne({username: req.body.username});
+  if(!user){
+    return res.status(500).send('User doesnt exist');
   }
   let passwordMatch = bcrypt.compareSync(req.body.password, user.password);
   if (!passwordMatch) {
@@ -173,32 +164,36 @@ app.post('/users/login', async (req, res) => {
     photoURL: user.photoURL
   };
   const options = { expiresIn: 2592000 };
-  jwt.sign(payload, 'secret', options, (err, token) => {
+  jwt.sign(payload, 'secret', options, async (err, token) => {
     if (err) {
       res.json({
         success: false,
         token: 'Error with the token'
       });
     } else {
+      await user.updateOne({isOnline: true});
       res.json({
         success: true,
         token: token
-      });
-    }
-  });
-});
-
-router.get(
-  '/test',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    console.log(req.user);
-    db.collection('users')
-      .findOne({ _id: req.user._id })
-      .then(user => {
-        res.json(user);
       })
-      .catch(err => res.status(404).json({ error: 'User does not exist!' }));
+    }
+    })
+  });
+ 
+
+app.put('/users/logout',
+  passport.authenticate('jwt', {session: false}),
+  (req, res) => {
+      User.findByIdAndUpdate(
+        req.user._id, 
+        {isOnline: 'false'}, 
+        {new: true}, 
+        (err, user) => {
+          if(err){
+            return res.status(500).send(err);
+          }
+          res.send(user);
+      });
   }
 );
 
@@ -209,4 +204,27 @@ app.delete('/users/clear', (req, res) => {
     else 
       return res.send("all deleted");
   });
-})
+});
+
+app.delete('/users/delete', async (req, res) => {
+  let userDeleted = await User.deleteOne({username: req.body.username});
+  if(userDeleted.deletedCount > 0){
+    res.send("user deleted");
+  }else{
+    res.status(500).send("Cant be deleted");
+  }
+});
+
+router.get(
+  '/test',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {  
+    db.collection('users')
+      .findOne({ _id: req.user._id })
+      .then(user => {
+        res.json(user);
+      })
+      .catch(err => res.status(404).json({ error: 'User does not exist!' }));
+  }
+);
+

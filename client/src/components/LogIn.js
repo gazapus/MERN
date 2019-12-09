@@ -1,7 +1,7 @@
 import React from 'react';
 import NavButton from './NavBotton';
 import HomeIcon from '../images/home.svg';
-import { fetchLogIn, UserLogOut } from '../redux/actions/loginAction';
+import { fetchLogIn, fetchLogout } from '../redux/actions/loginAction';
 import { connect } from 'react-redux';
 import {Link} from 'react-router-dom';
 import '../styles/LogIn.css';
@@ -16,6 +16,7 @@ class LogIn extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
+    this.closeSession = this.closeSession.bind(this);
   }
 
   submit(event) {
@@ -25,6 +26,10 @@ class LogIn extends React.Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+  }
+
+  closeSession(){
+    this.props.logOut(this.props.token);
   }
 
   render() {
@@ -39,7 +44,7 @@ class LogIn extends React.Component {
             <div id='logInSuccefullMessage'>
               <h2>Welcome back</h2>
             </div>
-            <button onClick={this.props.logOut}>salir</button>
+            <button onClick={this.closeSession}>salir</button>
           </div>
           <NavButton link='/' alt='home' img={HomeIcon} />
         </div>
@@ -112,7 +117,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchLogin: (a, b) => dispatch(fetchLogIn(a, b)),
-    logOut: () => dispatch(UserLogOut())
+    logOut: (token) => dispatch(fetchLogout(token))
   };
 };
 

@@ -13,8 +13,13 @@ module.exports = passport.use(
   new JwtStrategy(opts, (jwt_payload, done) => {
     User.findById(jwt_payload.id)
       .then(user => {
+        console.log(user);
         if (user) {
-          return done(null, user);
+          if(user.isOnline == "true"){
+            console.log(user.isOnline)
+            return done(null, user);
+          }
+          return done(null, false);
         }
         return done(null, false);
       })

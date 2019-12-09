@@ -2,6 +2,7 @@ let mongoose = require('mongoose');
 var primeraLetraAMayuscula = require('./funciones.js').primeraLetraAMayuscula;
 const isImageUrl = require('is-image-url');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 let userSchema = new mongoose.Schema({
   username: {
@@ -18,7 +19,8 @@ let userSchema = new mongoose.Schema({
   password: {
     type: String,
     min: [6, 'Password very short'],
-    required: [true, "password is required"]
+    required: [true, "password is required"],
+    set: value => hashPassword(value)
   },
   photoURL: {
     type: String,
@@ -49,9 +51,17 @@ let userSchema = new mongoose.Schema({
     validate: value => {
       return value != "";
     }
+  },
+  isOnline: {
+    type: String
   }
 }, {
   versionKey: false
 });
 
+function hashPassword(password){
+  let salt = bcrypt.genSaltSync(10);
+  let hash = bcrypt.hashSync(password, salt);
+  return hash;
+}
 module.exports = mongoose.model('User', userSchema, 'users');

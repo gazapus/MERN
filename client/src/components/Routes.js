@@ -6,6 +6,7 @@ import {
 import Cities from './Cities';
 import Home from './Home';
 import LogIn from './LogIn';
+import Profile from './Profile';
 import SignIn from './SignUp';
 import Itineraries from './Itineraries';
 import Acti from './ActivitiesCarousel';
@@ -19,6 +20,7 @@ function Routes() {
         <Route path="/SignIn" component={SignIn}/>
         <Route path="/Itineraries/:idCity" component={Itineraries}/>
         <Route path="/Acti" component={Acti}/>
+        <Route path="/Profile" component={Profile}/>
       </Switch>
   );
 }

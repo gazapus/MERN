@@ -1,7 +1,9 @@
 const defaultState = {
   success: false,
   token: null,
-  errorMessage: ''
+  errorMessage: '',
+  avatarURL: '',
+  username: ''
 };
 
 function loginReducer(state = defaultState, action) {
@@ -12,6 +14,8 @@ function loginReducer(state = defaultState, action) {
         ...state,
         success: true,
         token: action.payload.token,
+        avatarURL: action.payload.avatarURL,
+        username: action.payload.username,
         errorMessage: ''
       };
     case 'USER_LOGIN_ERROR':
@@ -19,14 +23,23 @@ function loginReducer(state = defaultState, action) {
         ...state,
         success: false,
         errorMessage: action.payload.error,
-        token: ''
+        token: '',
+        avatarURL: '',
+        username: ''
       };
-    case 'USER_LOGOUT':
+    case 'USER_LOGOUT_OK':
       return {
         ...state,
         success: false,
-        token: ''
+        token: '',
+        avatarURL: '',
+        username: ''
       };
+    case 'USER_LOGOUT_ERROR':
+      alert("Error to logout");
+      return {
+        ...state,
+        }
     default:
       return state;
   }
