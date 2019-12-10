@@ -10,6 +10,7 @@ import Profile from './Profile';
 import SignIn from './SignUp';
 import Itineraries from './Itineraries';
 import Acti from './ActivitiesCarousel';
+import Loging from './Loging';
 
 function Routes() {
   return (
@@ -21,6 +22,7 @@ function Routes() {
         <Route path="/Itineraries/:idCity" component={Itineraries}/>
         <Route path="/Acti" component={Acti}/>
         <Route path="/Profile" component={Profile}/>
+        <Route path="/Loging/:token" component={Loging}/>
       </Switch>
   );
 }

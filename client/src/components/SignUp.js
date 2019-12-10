@@ -62,6 +62,10 @@ class SignUp extends React.Component {
     this.updatePhoto = this.updatePhoto.bind(this);
   }
 
+  componentDidMount(){
+    window.addEventListener("hashchange", this.props.finishRegister());
+  }
+
   submit(event) {
     event.preventDefault();
     this.props.registerAction(
@@ -73,9 +77,6 @@ class SignUp extends React.Component {
       this.state.lastName,
       this.state.country
     );
-    setTimeout(() => {
-      this.props.finishRegister();
-    }, 5000);
   }
 
   handleChange(event) {
@@ -200,7 +201,7 @@ class SignUp extends React.Component {
           </form>
           <h5>{this.props.errorMessage}</h5>
         </div>
-        <NavButton link='/' alt='home' img={HomeIcon} />
+        <NavButton link='/' alt='home' img={HomeIcon}/>
       </div>
     );
   }

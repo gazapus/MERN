@@ -39,6 +39,11 @@ function loginReducer(state = defaultState, action) {
       return {
         ...state
       };
+    case 'FINISH_LOGIN':
+        return {
+          ...state,
+          errorMessage: ''
+        };
     default:
       return state;
   }

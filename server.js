@@ -240,10 +240,17 @@ app.get(
 
 app.get(
   '/users/google/redirect',
-  passport.authenticate('google'),/* { failureRedirect: '/mal' }),*/
-  (req, res) => {
-    console.log(req.user);  //!!!!!!!!!!!!!!!!!
-    res.redirect('/bien');
+  passport.authenticate('google', { failureRedirect: '/mal' }),
+  async (req, res) => {
+    const payload = {
+      id: req.user._id,
+      username: req.user.username,
+      photoURL: req.user.photoURL
+    };
+    const options = { expiresIn: 2592000 };
+    token = jwt.sign(payload, 'secret', options);
+    
+    res.redirect('http://localhost:3000/loging/' + token);
   }
 );
 
@@ -253,6 +260,7 @@ app.get('/mal', (req, res) => {
 });
 
 app.get('/bien', (req, res) => {
+  console.log(req);
   return res.send('bien');
 });
 

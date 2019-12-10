@@ -72,3 +72,9 @@ export function UserLoginError(error) {
     payload: { error: error }
   };
 }
+
+export function finishLogin(){
+  return {
+    type: 'FINISH_LOGIN'
+  }
+}

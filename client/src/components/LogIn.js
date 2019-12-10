@@ -1,7 +1,7 @@
 import React from 'react';
 import NavButton from './NavBotton';
 import HomeIcon from '../images/home.svg';
-import { fetchLogIn, fetchLogout } from '../redux/actions/loginAction';
+import { fetchLogIn, finishLogin } from '../redux/actions/loginAction';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../styles/LogIn.css';
@@ -17,17 +17,10 @@ class LogIn extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
-    this.closeSession = this.closeSession.bind(this);
-    this.handleGoogleButton = this.handleGoogleButton.bind(this);
   }
 
-  handleGoogleButton() {
-    console.log('google');
-    fetch('http://localhost:5000/users/google')
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+  componentDidMount() {
+    window.addEventListener("hashchange", this.props.finishLogin());
   }
 
   submit(event) {
@@ -37,11 +30,6 @@ class LogIn extends React.Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
-  }
-
-  closeSession() {
-    this.props.logOut(this.props.token);
-    return <Redirect to='/' />;
   }
 
   render() {
@@ -102,7 +90,6 @@ class LogIn extends React.Component {
             <Link to='/SignIn'>Create Account</Link>
           </div>
           <a id='googleButton' href='http://localhost:5000/users/google' />
-          {/*<button id='googleButton' onClick={this.handleGoogleButton} />*/}
         </div>
         <NavButton link='/' alt='home' img={HomeIcon} />
       </div>
@@ -121,7 +108,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchLogin: (a, b) => dispatch(fetchLogIn(a, b)),
-    logOut: token => dispatch(fetchLogout(token))
+    finishLogin: token => dispatch(finishLogin()),
   };
 };
 

@@ -1,6 +1,5 @@
 let mongoose = require('mongoose');
 var primeraLetraAMayuscula = require('./funciones.js').primeraLetraAMayuscula;
-const isImageUrl = require('is-image-url');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
@@ -19,14 +18,10 @@ let userSchema = new mongoose.Schema({
   password: {
     type: String,
     min: [6, 'Password very short'],
-    required: [true, "password is required"],
     set: value => hashPassword(value)
   },
   photoURL: {
     type: String,
-    validate: value => {
-      return value == "" || isImageUrl(value);
-    }
   },
   firstName: {
     type: String,
@@ -46,7 +41,6 @@ let userSchema = new mongoose.Schema({
   },
   country: {
     type: String,
-    required: [true, "country origin is required"],
     set: value => primeraLetraAMayuscula(value),
     validate: value => {
       return value != "";
