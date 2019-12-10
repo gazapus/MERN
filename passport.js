@@ -15,7 +15,6 @@ module.exports = passport.use(
       .then(user => {
         if (user) {
           if(user.isOnline == "true"){
-            console.log(user.isOnline)
             return done(null, user);
           }
           return done(null, false);

@@ -235,13 +235,14 @@ app.get(
 
 app.get(
   '/users/google',
-  passport.authenticate('google', { scope: ['profile'] })
+  passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
 app.get(
   '/users/google/redirect',
-  passport.authenticate('google', { failureRedirect: '/mal' }),
+  passport.authenticate('google'),/* { failureRedirect: '/mal' }),*/
   (req, res) => {
+    console.log(req.user);  //!!!!!!!!!!!!!!!!!
     res.redirect('/bien');
   }
 );
@@ -252,6 +253,11 @@ app.get('/mal', (req, res) => {
 });
 
 app.get('/bien', (req, res) => {
-  console.log('bien');
   return res.send('bien');
 });
+
+app.get('/logoutgoogle', function(req, res) {
+  console.log("logged out!");
+  req.logout();
+  res.redirect('/bien');
+})
