@@ -2,6 +2,7 @@ let mongoose = require('mongoose');
 var primeraLetraAMayuscula = require('./funciones.js').primeraLetraAMayuscula;
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+var ObjectID = require('mongodb').ObjectID;
 
 let userSchema = new mongoose.Schema({
   username: {
@@ -45,6 +46,9 @@ let userSchema = new mongoose.Schema({
     validate: value => {
       return value != "";
     }
+  },
+  favourites: {
+    type: [ObjectID]
   },
   isOnline: {
     type: String

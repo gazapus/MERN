@@ -10,38 +10,36 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 var ObjectID = require('mongodb').ObjectID;
-//const { check, validationResult } = require('express-validator');
+const keys = require('./keys');
 
 const port = process.env.PORT || 5000;
-app.listen(port);
-console.log('Conectado al puerto ' + port);
-app.use(cors());
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use('/', router);
+app.listen(5000, function(){
+  console.log("connected to port " + port);
+});
 
-//passport middleware
+app.use(cors());
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true }));
+app.use('/', router);
 app.use(passport.initialize());
-app.use(passport.session()); //*????????????????????
+app.use(passport.session()); //?
 
 require('./passport');
 require('./passportGoogle');
+
 passport.serializeUser(function(user, done) {
   done(null, user);
 });
-
 passport.deserializeUser(function(user, done) {
   done(null, user);
 });
-mongoose.connect(
-  'mongodb+srv://cristian:abcd1234@cluster0-jc6tk.mongodb.net/test?retryWrites=true&w=majority',
-  { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'cities' }
-);
+
+mongoose.connect( keys.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'cities' });
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', function() {
-  console.log('conectado a base de datos');
+  console.log('connected to the data base');
 });
 
 app.get('/getCities', (req, res) => {
@@ -112,20 +110,6 @@ app.get('/users/all', (req, res) => {
     res.send(users);
   });
 });
-/*
-app.post(
-  '/users/register',
-  //Verificación que los datos se hayan ingresado sean correctos
-  [
-    check('email').isEmail(),
-    check('password')
-      .isLength({ min: 8 })
-      .withMessage('must be at least 8 chars long'),
-    check('name')
-      .not()
-      .isEmpty()
-      .withMessage('must not be empty name')]
-  */
 
 app.post('/users/register', async (req, response) => {
   let userExist = await User.findOne({ username: req.body.username });
@@ -146,6 +130,7 @@ app.post('/users/register', async (req, response) => {
     lastName: req.body.lastName,
     country: req.body.country,
     photoURL: req.body.photoURL,
+    favourites: [],
     isOnline: false
   });
   newUser.save(function(err, res) {
@@ -171,7 +156,7 @@ app.post('/users/login', async (req, res) => {
     photoURL: user.photoURL
   };
   const options = { expiresIn: 2592000 };
-  jwt.sign(payload, 'secret', options, async (err, token) => {
+  jwt.sign(payload, keys.secretSign, options, async (err, token) => {
     if (err) {
       res.json({
         success: false,
@@ -249,23 +234,6 @@ app.get(
     };
     const options = { expiresIn: 2592000 };
     token = jwt.sign(payload, 'secret', options);
-    
     res.redirect('http://localhost:3000/loging/' + token);
   }
 );
-
-app.get('/mal', (req, res) => {
-  console.log('mal');
-  return res.send('mal');
-});
-
-app.get('/bien', (req, res) => {
-  console.log(req);
-  return res.send('bien');
-});
-
-app.get('/logoutgoogle', function(req, res) {
-  console.log("logged out!");
-  req.logout();
-  res.redirect('/bien');
-})

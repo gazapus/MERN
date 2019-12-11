@@ -1,13 +1,13 @@
 const passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./userSchema');
+const keys = require('./keys');
 
 module.exports = passport.use(
   new GoogleStrategy(
     {
-      clientID:
-        '801274283364-5dst57p9p461ct36kseq1k20sdqnov2i.apps.googleusercontent.com',
-      clientSecret: 'eFcdFv6J62Q6whNwwssq1qj6',
+      clientID: keys.idClientGoogle,
+      clientSecret: keys.secretKeyGoogle,
       callbackURL: '/users/google/redirect'
     },
     async function(accessToken, refreshToken, profile, cb, done) {
@@ -20,6 +20,7 @@ module.exports = passport.use(
           photoURL: cb.photos[0].value,
           firstName: cb.name.givenName,
           lastName: cb.name.familyName,
+          favourites: [],
           isOnline: true
         });
         user = await newUser.save()
