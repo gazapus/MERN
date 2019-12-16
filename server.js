@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 const City = require('./citySchema');
 const Itinerary = require('./ItinerarySchema');
 const User = require('./userSchema');
+const Favourite = require('./FavouriteSchema');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -238,32 +239,52 @@ app.get(
   }
 );
 
-app.post('/favourites/add', async (req, response) => {
-  let idCity = ObjectID(req.body.idCity);
+app.post('/favourites/update', async (req, response) => {
+  let itinerary = await Itinerary.findById(req.body.idItinerary);
+  if(!itinerary){
+    return response.status(500).send('Itinerary doesnt found');
+  }
   let user = await User.findById(req.body.idUser);
   if (!user) {
     return response.status(500).send('User doesnt found');
   }
-  if (!user.favourites.includes(idCity)) {
-    user.favourites.push(idCity);
-  } else {
-    let index = user.favourites.indexOf(idCity);
-    user.favourites.splice(index, 1);
+  let deleted = await Favourite.deleteOne({'idUser': user._id, 'idItinerary': itinerary._id});
+  if(deleted.deletedCount){
+    return response.send("removido");
+  }else{
+    let newFavourite = new Favourite({
+      'idUser': user._id,
+      'idItinerary': itinerary._id
+    });
+    newFavourite.save(function(err, res) {
+      if (err) {
+        return response.status(500).send('The favourite cant be saved');
+      }
+      return response.send(res);
+    });
   }
-  user.save(function(err, res) {
-    if (err) {
-      return response.status(500).send('The user cant be saved');
-    }
-    return response.send(res);
-  });
 });
-/*
-app.get('/favourite/check', async(req, res) => {
-  let idCity = ObjectID(req.body.idCity);
-  let user = await User.findById(req.body.idUser);
-  if (!user) {
-    return response.status(500).send('User doesnt found');
-  }
 
+app.get('/checkFavourite', async(req, res) => {
+  let isFavourite = await Favourite.findOne({'idUser': req.body.idUser, 'idItinerary': req.body.idItinerary});
+  if(isFavourite){
+    return res.send(true);
+  }else{
+    return res.send(false);
+  }
 })
-*/
+
+app.get('/checkFavourite2/:idItinerary/:idUser', async(req, res) => {
+  let isFavourite = await Favourite.findOne({'idUser': req.params.idUser, 'idItinerary': req.params.idItinerary});
+  console.log(isFavourite)
+  if(isFavourite){
+    return res.send(true);
+  }else{
+    return res.send(false);
+  }
+})
+
+app.get('/getFavs', async(req, res) => {
+  let favs = await Favourite.find({});
+  res.send(favs)
+})

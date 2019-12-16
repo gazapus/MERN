@@ -27,7 +27,8 @@ export function UserLoginOk(token) {
     payload: {
       token: token,
       avatarURL: decoded.photoURL,
-      username: decoded.username
+      username: decoded.username,
+      id: decoded.id
     }
   };
 }

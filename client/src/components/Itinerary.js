@@ -7,6 +7,7 @@ import ActivitiesCarousel from './ActivitiesCarousel';
 import Comment from './Comment';
 import FavOn from '../images/fav-on.png';
 import FavOff from '../images/fav-off.png';
+import axios from 'axios';
 
 const HashTagList = props => {
   return props.hashtags.map(hashtag => {
@@ -46,6 +47,20 @@ class Itinerary extends React.Component {
 
   componentDidMount() {
     this.props.onRef(this);
+    if(this.props.userId != ""){
+      let url = 'http://localhost:5000/checkFavourite2/' + this.props.itinerary._id + "/" + this.props.userId;
+      axios.get(url, {}).then( res => {
+        console.log(res.data);
+        this.setState({
+          isFav: res.data,
+          favImage: res.data ? FavOn : FavOff
+        })
+      })
+      .catch(error => {
+        console.log(error.response);
+      })
+    }
+    
   }
   componentWillUnmount() {
     this.props.onRef(undefined);
@@ -75,10 +90,28 @@ class Itinerary extends React.Component {
   }
 
   handleFavourite() {
+    if(this.props.userId == ""){
+      return alert("Debe iniciar sesion")
+    }
     this.setState({
       isFav: !this.state.isFav,
       favImage: this.state.isFav ? FavOff : FavOn
     });
+    var data = {
+      idUser: this.props.userId,
+      idItinerary: this.props.itinerary._id
+    };
+    axios.post('http://localhost:5000/favourites/update', data).then( res => {
+      console.log("favorito cambiado");
+    })
+    .catch(error => {
+      console.log("falló");
+      this.setState({
+        isFav: !this.state.isFav,
+        favImage: this.state.isFav ? FavOff : FavOn
+      });
+    });
+    
   }
 
   handleClickClose(e) {
@@ -147,7 +180,9 @@ const mapStateToProps = state => {
   return {
     activities: state.activitiesReducer.activities,
     pending: state.activitiesReducer.pending,
-    error: state.activitiesReducer.error
+    error: state.activitiesReducer.error,
+    userId: state.loginReducer.id
+
   };
 };
 

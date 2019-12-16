@@ -42,11 +42,9 @@ class Itineraries extends React.Component {
     console.log('hasd');
     this.props.fetchItineraries(this.props.match.params.idCity);
     this.props.fetchCurrentCity(this.props.match.params.idCity);
-    console.log(this.props.currentCity);
   }
 
   render() {
-    console.log(this.props.currentCity);
     if (this.props.pending || this.props.currentCityPending)
       return <Spinner color='primary' />;
 

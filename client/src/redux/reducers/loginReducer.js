@@ -3,7 +3,8 @@ const defaultState = {
   token: null,
   errorMessage: '',
   avatarURL: '',
-  username: ''
+  username: '',
+  id: ''
 };
 
 function loginReducer(state = defaultState, action) {
@@ -15,6 +16,7 @@ function loginReducer(state = defaultState, action) {
         token: action.payload.token,
         avatarURL: action.payload.avatarURL,
         username: action.payload.username,
+        id: action.payload.id,
         errorMessage: ''
       };
     case 'USER_LOGIN_ERROR':
@@ -24,7 +26,8 @@ function loginReducer(state = defaultState, action) {
         errorMessage: action.payload.error,
         token: '',
         avatarURL: '',
-        username: ''
+        username: '',
+        id: ''
       };
     case 'USER_LOGOUT':
       return {
@@ -32,7 +35,8 @@ function loginReducer(state = defaultState, action) {
         success: false,
         token: '',
         avatarURL: '',
-        username: ''
+        username: '',
+        id: ''
       };
     case 'FINISH_LOGIN':
       return {
