@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/Itinerary.css';
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
+import { getCommentsAction } from '../redux/actions/commentAction';
 import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
@@ -18,7 +19,8 @@ const HashTagList = props => {
     );
   });
 };
-
+{
+  /*}
 class CommentsList extends React.Component {
   render() {
     return this.props.comments.map(comment => {
@@ -30,37 +32,50 @@ class CommentsList extends React.Component {
     });
   }
 }
-
+*/
+}
 class Itinerary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isOpen: false,
       isFav: false,
-      favImage: FavOff
+      favImage: FavOff,
+      newComment: ''
     };
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClickClose = this.handleClickClose.bind(this);
     this.toggle = this.toggle.bind(this);
     this.handleFavourite = this.handleFavourite.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSendComment = this.handleSendComment.bind(this);
   }
 
   componentDidMount() {
     this.props.onRef(this);
-    if(this.props.userId != ""){
-      let url = 'http://localhost:5000/checkFavourite2/' + this.props.itinerary._id + "/" + this.props.userId;
-      axios.get(url, {}).then( res => {
-        console.log(res.data);
-        this.setState({
-          isFav: res.data,
-          favImage: res.data ? FavOn : FavOff
+    if (this.props.token != '') {
+      let url =
+        'http://localhost:5000/checkFavourite/' + this.props.itinerary._id;
+      const options = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: 'bearer ' + this.props.token
+        },
+        url: url
+      };
+      axios(options)
+        .then(res => {
+          console.log(res.data);
+          this.setState({
+            isFav: res.data,
+            favImage: res.data ? FavOn : FavOff
+          });
         })
-      })
-      .catch(error => {
-        console.log(error.response);
-      })
+        .catch(error => {
+          console.log(error.response);
+        });
     }
-    
   }
   componentWillUnmount() {
     this.props.onRef(undefined);
@@ -87,36 +102,54 @@ class Itinerary extends React.Component {
     this.props.onOpen(this.props.itinerary._id);
     this.toggle();
     this.props.fetchActivities(this.props.itinerary._id);
+    this.props.getComments(this.props.itinerary._id);
   }
 
   handleFavourite() {
-    if(this.props.userId == ""){
-      return alert("Debe iniciar sesion")
+    if (this.props.token == '') {
+      return alert('Debe iniciar sesion');
     }
     this.setState({
       isFav: !this.state.isFav,
       favImage: this.state.isFav ? FavOff : FavOn
     });
-    var data = {
-      idUser: this.props.userId,
-      idItinerary: this.props.itinerary._id
+    let url =
+      'http://localhost:5000/favourites/update/' + this.props.itinerary._id;
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'bearer ' + this.props.token
+      },
+      url: url
     };
-    axios.post('http://localhost:5000/favourites/update', data).then( res => {
-      console.log("favorito cambiado");
-    })
-    .catch(error => {
-      console.log("falló");
-      this.setState({
-        isFav: !this.state.isFav,
-        favImage: this.state.isFav ? FavOff : FavOn
+    axios(options)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(error => {
+        console.log('falló actualizacion de favorito');
+        this.setState({
+          isFav: !this.state.isFav,
+          favImage: this.state.isFav ? FavOff : FavOn
+        });
       });
-    });
-    
   }
 
   handleClickClose(e) {
     e.preventDefault();
     this.toggle();
+  }
+
+  handleChange(e) {
+    e.preventDefault();
+    this.setState({
+      newComment: e.target.value
+    });
+  }
+
+  handleSendComment(e) {
+    e.preventDefault();
   }
 
   render() {
@@ -162,9 +195,15 @@ class Itinerary extends React.Component {
               <h5>Activities: </h5>
               <ActivitiesCarousel activities={this.props.activities} />
               <h5>Comments:</h5>
-              <ul>
-                <CommentsList comments={this.props.comments} />
-              </ul>
+              <div className='commentInputContainer'>
+                <textarea onChange={this.handleChange}></textarea>
+                <button
+                  className='buttonComment'
+                  onClick={this.handleSendComment}
+                >
+                  Send
+                </button>
+              </div>
             </div>
             <a className='viewAllBar' onClick={this.handleClickClose}>
               <span>⮝ close ⮝</span>
@@ -181,14 +220,16 @@ const mapStateToProps = state => {
     activities: state.activitiesReducer.activities,
     pending: state.activitiesReducer.pending,
     error: state.activitiesReducer.error,
-    userId: state.loginReducer.id
-
+    token: state.loginReducer.token,
+    comments: state.commentsReducer.comments
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchActivities: idItinerary => dispatch(fetchActivitiesAction(idItinerary))
+    fetchActivities: idItinerary =>
+      dispatch(fetchActivitiesAction(idItinerary)),
+    getComments: idItinerary => dispatch(getCommentsAction(idItinerary))
   };
 };
 
