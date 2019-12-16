@@ -26,7 +26,7 @@ function loginReducer(state = defaultState, action) {
         avatarURL: '',
         username: ''
       };
-    case 'USER_LOGOUT_OK':
+    case 'USER_LOGOUT':
       return {
         ...state,
         success: false,
@@ -34,16 +34,11 @@ function loginReducer(state = defaultState, action) {
         avatarURL: '',
         username: ''
       };
-    case 'USER_LOGOUT_ERROR':
-      alert('Error to logout');
-      return {
-        ...state
-      };
     case 'FINISH_LOGIN':
-        return {
-          ...state,
-          errorMessage: ''
-        };
+      return {
+        ...state,
+        errorMessage: ''
+      };
     default:
       return state;
   }

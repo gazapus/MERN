@@ -1,10 +1,12 @@
-import { setCurrentCity } from "./itinerariesActions";
+import { setCurrentCity } from './itinerariesActions';
 
 function fetchCurrentCity(idCity) {
+  console.log(idCity);
   return dispatch => {
-    fetch("http://localhost:5000/city/" + idCity)
+    fetch('http://localhost:5000/city/' + idCity)
       .then(res => res.json())
       .then(res => {
+        console.log(res);
         dispatch(setCurrentCity(res));
         return res;
       })

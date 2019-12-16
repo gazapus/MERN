@@ -5,27 +5,28 @@ export const SET_CURRENT_CITY = 'SET_CURRENT_CITY';
 
 export function fetchItinerariesPending() {
   return {
-      type: FETCH_ITINERARIES_PENDING,
-  }
+    type: FETCH_ITINERARIES_PENDING
+  };
 }
 
 export function fetchItinerariesSuccess(_itineraries) {
   return {
-      type: FETCH_ITINERARIES_SUCCESS,
-      payload: {itineraries: _itineraries}
-  }
+    type: FETCH_ITINERARIES_SUCCESS,
+    payload: { itineraries: _itineraries }
+  };
 }
 
 export function fetchItinerariesError(_error) {
   return {
-      type: FETCH_ITINERARIES_ERROR,
-      payload: {error: _error}
-  }
+    type: FETCH_ITINERARIES_ERROR,
+    payload: { error: _error }
+  };
 }
 
 export function setCurrentCity(city) {
+  console.log(city);
   return {
-      type: SET_CURRENT_CITY,
-      payload: {currentCity: city}
-  }
+    type: SET_CURRENT_CITY,
+    payload: { currentCity: city }
+  };
 }

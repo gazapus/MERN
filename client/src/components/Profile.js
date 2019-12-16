@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import NavBotton from './NavBotton';
-import HomeIcon from "../images/home.svg";
-import axios from "axios";
+import HomeIcon from '../images/home.svg';
+import axios from 'axios';
 
 class Profile extends React.Component {
   constructor(props) {
@@ -11,30 +11,47 @@ class Profile extends React.Component {
       firstName: '',
       lastName: '',
       email: '',
-      country: ''
-    }
+      country: '',
+      accessDenied: false
+    };
   }
   componentDidMount() {
     var url = 'http://localhost:5000/users/profile';
     const options = {
       method: 'GET',
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-        "Authorization": "bearer " + this.props.token
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: 'bearer ' + this.props.token
       },
       url: url
-    }
-    axios(options).then(res =>{
-      this.setState({
-        firstName: res.data.firstName,
-        lastName: res.data.lastName,
-        email: res.data.email,
-        country: res.data.country
+    };
+    axios(options)
+      .then(res => {
+        this.setState({
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          email: res.data.email,
+          country: res.data.country,
+          accessDenied: false
+        });
       })
-    }).catch(err =>console.log(err))
+      .catch(err => {
+        this.setState({
+          accessDenied: true
+        });
+        console.log(err);
+      });
   }
 
   render() {
+    if (this.state.accessDenied) {
+      return (
+        <div>
+          <h2>Sesion expirada, vuelva a iniciar sesion</h2>
+          <NavBotton link='/' img={HomeIcon} alt='home' />
+        </div>
+      );
+    }
     return (
       <div>
         <h2>{this.props.username}</h2>
@@ -42,11 +59,11 @@ class Profile extends React.Component {
         <h3>{this.state.lastName}</h3>
         <h3>{this.state.country}</h3>
         <h3>{this.state.email}</h3>
-        <NavBotton link="/" img={HomeIcon} alt="home" />
+        <NavBotton link='/' img={HomeIcon} alt='home' />
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = state => {
   return {

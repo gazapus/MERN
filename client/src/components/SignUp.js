@@ -62,8 +62,8 @@ class SignUp extends React.Component {
     this.updatePhoto = this.updatePhoto.bind(this);
   }
 
-  componentDidMount(){
-    window.addEventListener("hashchange", this.props.finishRegister());
+  componentDidMount() {
+    window.addEventListener('hashchange', this.props.finishRegister());
   }
 
   submit(event) {
@@ -102,9 +102,12 @@ class SignUp extends React.Component {
         <div id='signUpContainer'>
           <div id='signUpBody'>
             <div id='succefullyRegisterMessage'>
-              <h2>You have been successfully registered<br/>Check your mail inbox and confirm your account</h2>
+              <h2>
+                You have been successfully registered
+                <br />
+                Check your mail inbox and confirm your account
+              </h2>
             </div>
-            <button onClick={this.props.finishRegister} />
           </div>
           <NavButton link='/' alt='home' img={HomeIcon} />
         </div>
@@ -201,7 +204,7 @@ class SignUp extends React.Component {
           </form>
           <h5>{this.props.errorMessage}</h5>
         </div>
-        <NavButton link='/' alt='home' img={HomeIcon}/>
+        <NavButton link='/' alt='home' img={HomeIcon} />
       </div>
     );
   }

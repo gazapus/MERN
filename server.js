@@ -13,12 +13,12 @@ var ObjectID = require('mongodb').ObjectID;
 const keys = require('./keys');
 
 const port = process.env.PORT || 5000;
-app.listen(5000, function(){
-  console.log("connected to port " + port);
+app.listen(5000, function() {
+  console.log('connected to port ' + port);
 });
 
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', router);
 app.use(passport.initialize());
@@ -34,7 +34,11 @@ passport.deserializeUser(function(user, done) {
   done(null, user);
 });
 
-mongoose.connect( keys.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: 'cities' });
+mongoose.connect(keys.mongoURL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  dbName: 'cities'
+});
 
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
@@ -56,32 +60,35 @@ app.get('/getItineraries', (req, res) => {
   });
 });
 
-app.get('/itineraries/:id', (req, res) => {
+app.get('/itineraries/:id', async (req, res) => {
   let id = ObjectID(req.params.id);
-  db.collection('itineraries')
-    .find(id)
-    .toArray((err, results) => {
-      if (err) {
-        throw err;
-      }
-      res.send(results);
-    });
+  let itinerary = await Itinerary.findById(id);
+  if (!itinerary) {
+    return console.error('error');
+  }
+  res.send(itinerary);
 });
 
-app.get('/itinerariesByCity/:cityId', (req, res) => {
+app.get('/itinerariesByCity/:cityId', async (req, res) => {
   let id = ObjectID(req.params.cityId);
-  db.collection('itineraries')
-    .find({ city: id })
-    .toArray((err, results) => {
-      if (err) {
-        throw err;
-      }
-      res.send(results);
-    });
+  let city = await City.findById(id);
+  Itinerary.find({ city: city.id }, (err, docs) => {
+    if (err) throw err;
+    res.send(docs);
+  });
 });
 
 app.get('/city/:id', (req, res) => {
   let id = ObjectID(req.params.id);
+  /*let city = await City.findById(id);
+  console.log(city);
+  if (!city) {
+    return res.status(500).send('Error al cargar ciudad');
+  }
+  return res.send(
+    city
+  );*/
+  console.log('asd');
   db.collection('cities')
     .find(id)
     .toArray((err, results) => {
@@ -130,8 +137,7 @@ app.post('/users/register', async (req, response) => {
     lastName: req.body.lastName,
     country: req.body.country,
     photoURL: req.body.photoURL,
-    favourites: [],
-    isOnline: false
+    favourites: []
   });
   newUser.save(function(err, res) {
     if (err) {
@@ -155,7 +161,9 @@ app.post('/users/login', async (req, res) => {
     username: user.username,
     photoURL: user.photoURL
   };
-  const options = { expiresIn: 2592000 };
+  //const options = { expiresIn: 2592000 };
+  const options = { expiresIn: 600 };
+
   jwt.sign(payload, keys.secretSign, options, async (err, token) => {
     if (err) {
       res.json({
@@ -171,24 +179,6 @@ app.post('/users/login', async (req, res) => {
     }
   });
 });
-
-app.put(
-  '/users/logout',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    User.findByIdAndUpdate(
-      req.user._id,
-      { isOnline: 'false' },
-      { new: true },
-      (err, user) => {
-        if (err) {
-          return res.status(500).send(err);
-        }
-        res.send(user);
-      }
-    );
-  }
-);
 
 app.delete('/users/clear', (req, res) => {
   User.deleteMany({}, function(err) {
@@ -208,7 +198,10 @@ app.delete('/users/delete', async (req, res) => {
 
 app.get(
   '/users/profile',
-  passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: '/error'
+  }),
   (req, res) => {
     User.findById(req.user._id, (err, user) => {
       if (err)
@@ -218,6 +211,11 @@ app.get(
   }
 );
 
+app.get('/error', (req, res) => {
+  console.log('error autentificacion');
+  return res.status(500).send('Sesion expirada');
+});
+
 app.get(
   '/users/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
@@ -225,7 +223,9 @@ app.get(
 
 app.get(
   '/users/google/redirect',
-  passport.authenticate('google', { failureRedirect: '/mal' }),
+  passport.authenticate('google', {
+    failureRedirect: 'http://localhost:3000/LogIn'
+  }),
   async (req, res) => {
     const payload = {
       id: req.user._id,
@@ -237,3 +237,33 @@ app.get(
     res.redirect('http://localhost:3000/loging/' + token);
   }
 );
+
+app.post('/favourites/add', async (req, response) => {
+  let idCity = ObjectID(req.body.idCity);
+  let user = await User.findById(req.body.idUser);
+  if (!user) {
+    return response.status(500).send('User doesnt found');
+  }
+  if (!user.favourites.includes(idCity)) {
+    user.favourites.push(idCity);
+  } else {
+    let index = user.favourites.indexOf(idCity);
+    user.favourites.splice(index, 1);
+  }
+  user.save(function(err, res) {
+    if (err) {
+      return response.status(500).send('The user cant be saved');
+    }
+    return response.send(res);
+  });
+});
+/*
+app.get('/favourite/check', async(req, res) => {
+  let idCity = ObjectID(req.body.idCity);
+  let user = await User.findById(req.body.idUser);
+  if (!user) {
+    return response.status(500).send('User doesnt found');
+  }
+
+})
+*/

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
 import Comment from './Comment';
+import FavOn from '../images/fav-on.png';
+import FavOff from '../images/fav-off.png';
 
 const HashTagList = props => {
   return props.hashtags.map(hashtag => {
@@ -32,11 +34,14 @@ class Itinerary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isOpen: false
+      isOpen: false,
+      isFav: false,
+      favImage: FavOff
     };
     this.handleClickOpen = this.handleClickOpen.bind(this);
     this.handleClickClose = this.handleClickClose.bind(this);
     this.toggle = this.toggle.bind(this);
+    this.handleFavourite = this.handleFavourite.bind(this);
   }
 
   componentDidMount() {
@@ -69,6 +74,13 @@ class Itinerary extends React.Component {
     this.props.fetchActivities(this.props.itinerary._id);
   }
 
+  handleFavourite() {
+    this.setState({
+      isFav: !this.state.isFav,
+      favImage: this.state.isFav ? FavOff : FavOn
+    });
+  }
+
   handleClickClose(e) {
     e.preventDefault();
     this.toggle();
@@ -92,6 +104,11 @@ class Itinerary extends React.Component {
                 <h4>Likes: {this.props.itinerary.rating}</h4>
                 <h4>{this.props.itinerary.duration} hours</h4>
                 <h4>$${this.props.itinerary.price}</h4>
+                <img
+                  src={this.state.favImage}
+                  alt='fav'
+                  onClick={this.handleFavourite}
+                />
               </div>
               <ul>
                 <HashTagList hashtags={this.props.itinerary.hashtag} />
@@ -102,7 +119,7 @@ class Itinerary extends React.Component {
             <a
               className={this.state.isOpen ? 'invisible' : 'viewAllBar'}
               onClick={this.handleClickOpen}
-              href="#"
+              href='#'
             >
               <span>⮟ view all ⮟</span>
             </a>

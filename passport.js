@@ -14,10 +14,7 @@ module.exports = passport.use(
     User.findById(jwt_payload.id)
       .then(user => {
         if (user) {
-          if(user.isOnline == "true"){
-            return done(null, user);
-          }
-          return done(null, false);
+          return done(null, user);
         }
         return done(null, false);
       })

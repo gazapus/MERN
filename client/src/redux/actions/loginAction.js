@@ -20,27 +20,6 @@ export function fetchLogIn(_username, _password) {
   };
 }
 
-export function fetchLogout(token) {
-  return dispatch => {
-    var url = 'http://localhost:5000/users/logout';
-    var data = {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Authorization: 'bearer ' + token
-      }
-    };
-    axios
-      .put(url, {}, data)
-      .then(res => {
-        dispatch(UserLogoutOk());
-      })
-      .catch(error => {
-        console.log(error.response);
-        dispatch(UserLogoutError());
-      });
-  };
-}
-
 export function UserLoginOk(token) {
   let decoded = jwt_decode(token);
   return {
@@ -53,16 +32,9 @@ export function UserLoginOk(token) {
   };
 }
 
-export function UserLogoutOk() {
+export function UserLogout() {
   return {
-    type: 'USER_LOGOUT_OK'
-  };
-}
-
-export function UserLogoutError(error) {
-  return {
-    type: 'USER_LOGOUT_ERROR',
-    payload: { error: error }
+    type: 'USER_LOGOUT'
   };
 }
 
@@ -73,8 +45,8 @@ export function UserLoginError(error) {
   };
 }
 
-export function finishLogin(){
+export function finishLogin() {
   return {
     type: 'FINISH_LOGIN'
-  }
+  };
 }
