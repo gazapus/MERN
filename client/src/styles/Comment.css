@@ -1,24 +1,51 @@
-.commentContainer{
-     display: flex;
-     flex-direction: column;
-     justify-content: left;
-     align-self: flex-start;
-     width: 100%
+.commentContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
-.commentBody{
-     margin: 1%;
-     width: 90%;
-     height: auto;
-     border-style: solid;
-     border-color: rgba(11, 2, 90, 0.685);
-     border-radius: 10px;
-     border-width: 0.5vmin;
-     background-color: white;
-     color: rgb(20, 1, 1);
-     padding-left: 2%;
+.commentBody {
+  margin: 1%;
+  width: 90%;
+  height: auto;
+  border-style: solid;
+  border-color: rgba(11, 2, 90, 0.685);
+  border-radius: 6px;
+  border-width: 0.5vmin;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
 }
 
-.commentBody p{
-     font-family: Georgia, 'Times New Roman', Times, serif;
-     font-size: small;
+.userCommentInfo {
+  margin-left: 1%;
+  width: 24%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userCommentInfo img {
+  width: 65%;
+  border-radius: 50%;
+  margin: 10% 3% 0% 3%;
+}
+
+.userCommentInfo p {
+  font-size: 3.5vmin !important;
+  font-family: 'Times New Roman', Times, serif !important;
+  font-weight: lighter;
+}
+
+.textComment {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin: 1% 1% 0 3%;
+  font-style: italic;
+}
+
+.commentBody p {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: small;
 }

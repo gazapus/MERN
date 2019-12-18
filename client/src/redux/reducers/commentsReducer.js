@@ -1,6 +1,7 @@
 const defaultState = {
   comments: [],
-  error: null
+  error: null,
+  commentAdded: false
 };
 
 function commentsReducer(state = defaultState, action) {
@@ -15,6 +16,18 @@ function commentsReducer(state = defaultState, action) {
       return {
         ...state,
         error: action.payload.error
+      };
+    case 'COMMENT_ADDED':
+      let newComments = [action.payload.newComment].concat(state.comments);
+      return {
+        ...state,
+        commentAdded: true,
+        comments: newComments
+      };
+    case 'CLEAR_COMMENT_LOADED':
+      return {
+        ...state,
+        commentAdded: false
       };
     default:
       return state;

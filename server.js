@@ -207,11 +207,28 @@ app.get(
   (req, res) => {
     User.findById(req.user._id, (err, user) => {
       if (err)
-        return res.status(500).send('Error to get data from the data base');
+        return res
+          .status(500)
+          .send('Error to get data from the data base profile');
       return res.send(user);
     });
   }
 );
+
+app.get('/users/get/:idUser', (req, res) => {
+  User.findById(req.params.idUser, (err, user) => {
+    if (err)
+      return res
+        .status(500)
+        .send('Error to get data from the data base iduser');
+    let userData = {
+      id: user._id,
+      username: user.username,
+      photoURL: user.photoURL
+    };
+    return res.send(userData);
+  });
+});
 
 app.get('/error', (req, res) => {
   console.log('error autentificacion');
@@ -368,4 +385,11 @@ app.delete(
 app.get('/comments/:idItinerary', async (req, res) => {
   let allComments = await Comment.find({ idItinerary: req.params.idItinerary });
   res.send(allComments);
+});
+
+app.delete('/comments/delete/all', (req, res) => {
+  Comment.deleteMany({}, function(err) {
+    if (err) return handleError(err);
+    else return res.send('all deleted');
+  });
 });

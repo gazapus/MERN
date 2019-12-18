@@ -1,11 +1,11 @@
 import React from 'react';
 import '../styles/Itinerary.css';
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
-<<<<<<< HEAD
-import { getCommentsAction, sendComment } from '../redux/actions/commentAction';
-=======
-import { getCommentsAction } from '../redux/actions/commentAction';
->>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
+import {
+  getCommentsAction,
+  sendComment,
+  clearCommentLoadedOk
+} from '../redux/actions/commentAction';
 import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
@@ -23,21 +23,19 @@ const HashTagList = props => {
     );
   });
 };
-{
-  /*}
+
 class CommentsList extends React.Component {
   render() {
     return this.props.comments.map(comment => {
       return (
-        <li className='commentElement' key={comment}>
-          <Comment text={comment} />
+        <li className='commentElement' key={comment._id}>
+          <Comment text={comment.text} idUser={comment.idUser} />
         </li>
       );
     });
   }
 }
-*/
-}
+
 class Itinerary extends React.Component {
   constructor(props) {
     super(props);
@@ -137,10 +135,7 @@ class Itinerary extends React.Component {
           isFav: !this.state.isFav,
           favImage: this.state.isFav ? FavOff : FavOn
         });
-<<<<<<< HEAD
         alert('Debe iniciar sesión');
-=======
->>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
       });
   }
 
@@ -158,13 +153,20 @@ class Itinerary extends React.Component {
 
   handleSendComment(e) {
     e.preventDefault();
-<<<<<<< HEAD
-    this.props.addNewComment(this.state.newComment, this.props.token);
-=======
->>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
+    this.props.addNewComment(
+      this.state.newComment,
+      this.props.token,
+      this.props.itinerary._id
+    );
   }
 
   render() {
+    if (this.props.commentLoaded) {
+      this.setState({
+        newComment: ''
+      });
+      this.props.clearCommentLoadedOk();
+    }
     return (
       <div className='itineraryContainer'>
         <div className='itineraryCardContainer'>
@@ -208,13 +210,19 @@ class Itinerary extends React.Component {
               <ActivitiesCarousel activities={this.props.activities} />
               <h5>Comments:</h5>
               <div className='commentInputContainer'>
-                <textarea onChange={this.handleChange}></textarea>
+                <textarea
+                  onChange={this.handleChange}
+                  value={this.state.newComment}
+                ></textarea>
                 <button
                   className='buttonComment'
                   onClick={this.handleSendComment}
                 >
                   Send
                 </button>
+              </div>
+              <div>
+                <CommentsList comments={this.props.comments} />
               </div>
             </div>
             <a className='viewAllBar' onClick={this.handleClickClose}>
@@ -233,7 +241,8 @@ const mapStateToProps = state => {
     pending: state.activitiesReducer.pending,
     error: state.activitiesReducer.error,
     token: state.loginReducer.token,
-    comments: state.commentsReducer.comments
+    comments: state.commentsReducer.comments,
+    commentLoaded: state.commentsReducer.commentAdded
   };
 };
 
@@ -242,7 +251,9 @@ const mapDispatchToProps = dispatch => {
     fetchActivities: idItinerary =>
       dispatch(fetchActivitiesAction(idItinerary)),
     getComments: idItinerary => dispatch(getCommentsAction(idItinerary)),
-    addNewComment: (comment, token) => dispatch(sendComment(comment, token))
+    addNewComment: (comment, token, idItinerary) =>
+      dispatch(sendComment(comment, token, idItinerary)),
+    clearCommentLoadedOk: () => dispatch(clearCommentLoadedOk())
   };
 };
 

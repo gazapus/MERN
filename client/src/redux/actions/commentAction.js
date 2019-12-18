@@ -1,9 +1,5 @@
 import axios from 'axios';
-<<<<<<< HEAD
 import qs from 'qs';
-=======
-import jwt_decode from 'jwt-decode';
->>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
 
 export function getCommentsAction(idItinerary) {
   return dispatch => {
@@ -21,13 +17,15 @@ export function getCommentsAction(idItinerary) {
   };
 }
 
-<<<<<<< HEAD
-export function sendComment(_comment, token) {
+export function sendComment(_comment, token, _idItinerary) {
   console.log(_comment);
   console.log(token);
   return dispatch => {
     var url = 'http://localhost:5000/comments/add';
-    const data = { textComment: _comment };
+    const data = {
+      textComment: _comment,
+      idItinerary: _idItinerary
+    };
     const options = {
       method: 'POST',
       data: qs.stringify(data),
@@ -39,7 +37,8 @@ export function sendComment(_comment, token) {
     };
     axios(options)
       .then(res => {
-        updateComments(res.data);
+        console.log(res);
+        dispatch(updateComments(res.data));
         console.log('comentario agregado');
       })
       .catch(err => {
@@ -48,17 +47,20 @@ export function sendComment(_comment, token) {
   };
 }
 
-function updateComments() {
-  getCommentsAction();
+export function updateComments(newComment) {
+  return {
+    type: 'COMMENT_ADDED',
+    payload: {
+      newComment: newComment
+    }
+  };
 }
 
-=======
->>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
 export function loadComments(_comments) {
   return {
     type: 'LOAD_COMMENTS',
     payload: {
-      comments: _comments
+      comments: _comments.reverse()
     }
   };
 }
@@ -69,5 +71,11 @@ export function cantLoadComments(_error) {
     payload: {
       error: _error
     }
+  };
+}
+
+export function clearCommentLoadedOk() {
+  return {
+    type: 'CLEAR_COMMENT_LOADED'
   };
 }
