@@ -164,7 +164,7 @@ app.post('/users/login', async (req, res) => {
     username: user.username,
     photoURL: user.photoURL
   };
-  const options = { expiresIn: 2400 };
+  const options = { expiresIn: 240044 };
 
   jwt.sign(payload, keys.secretSign, options, async (err, token) => {
     if (err) {
@@ -307,6 +307,7 @@ app.post(
     failureRedirect: '/error'
   }),
   async (req, response) => {
+    console.log(req.body);
     let token = req.headers.authorization.split(' ')[1];
     let idUser = jwt_decode(token).id;
     let newComment = new Comment({

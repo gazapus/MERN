@@ -126,14 +126,16 @@
   width: 90%;
   border-width: 2px;
   border-style: double;
+  z-index: 10;
 }
 .commentInputContainer button {
   align-self: flex-end;
-  margin-right: 5%;
-  margin-top: -3%;
+  margin-right: 6%;
+  margin-top: -2%;
   border-radius: 20%;
   background-color: rgb(37, 177, 219);
   border-style: groove;
   border-width: 2px;
   color: white;
+  z-index: 11;
 }

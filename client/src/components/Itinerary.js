@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/Itinerary.css';
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
-import { getCommentsAction } from '../redux/actions/commentAction';
+import { getCommentsAction, sendComment } from '../redux/actions/commentAction';
 import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
@@ -133,6 +133,7 @@ class Itinerary extends React.Component {
           isFav: !this.state.isFav,
           favImage: this.state.isFav ? FavOff : FavOn
         });
+        alert('Debe iniciar sesión');
       });
   }
 
@@ -150,6 +151,7 @@ class Itinerary extends React.Component {
 
   handleSendComment(e) {
     e.preventDefault();
+    this.props.addNewComment(this.state.newComment, this.props.token);
   }
 
   render() {
@@ -229,7 +231,8 @@ const mapDispatchToProps = dispatch => {
   return {
     fetchActivities: idItinerary =>
       dispatch(fetchActivitiesAction(idItinerary)),
-    getComments: idItinerary => dispatch(getCommentsAction(idItinerary))
+    getComments: idItinerary => dispatch(getCommentsAction(idItinerary)),
+    addNewComment: (comment, token) => dispatch(sendComment(comment, token))
   };
 };
 
