@@ -1,5 +1,9 @@
 import axios from 'axios';
+<<<<<<< HEAD
 import qs from 'qs';
+=======
+import jwt_decode from 'jwt-decode';
+>>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
 
 export function getCommentsAction(idItinerary) {
   return dispatch => {
@@ -17,6 +21,7 @@ export function getCommentsAction(idItinerary) {
   };
 }
 
+<<<<<<< HEAD
 export function sendComment(_comment, token) {
   console.log(_comment);
   console.log(token);
@@ -47,6 +52,8 @@ function updateComments() {
   getCommentsAction();
 }
 
+=======
+>>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
 export function loadComments(_comments) {
   return {
     type: 'LOAD_COMMENTS',

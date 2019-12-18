@@ -1,7 +1,11 @@
 import React from 'react';
 import '../styles/Itinerary.css';
 import fetchActivitiesAction from '../redux/actions/fetchActivities';
+<<<<<<< HEAD
 import { getCommentsAction, sendComment } from '../redux/actions/commentAction';
+=======
+import { getCommentsAction } from '../redux/actions/commentAction';
+>>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
 import { connect } from 'react-redux';
 import { Collapse } from 'reactstrap';
 import ActivitiesCarousel from './ActivitiesCarousel';
@@ -133,7 +137,10 @@ class Itinerary extends React.Component {
           isFav: !this.state.isFav,
           favImage: this.state.isFav ? FavOff : FavOn
         });
+<<<<<<< HEAD
         alert('Debe iniciar sesión');
+=======
+>>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
       });
   }
 
@@ -151,7 +158,10 @@ class Itinerary extends React.Component {
 
   handleSendComment(e) {
     e.preventDefault();
+<<<<<<< HEAD
     this.props.addNewComment(this.state.newComment, this.props.token);
+=======
+>>>>>>> b8596ab3ae6638caee7298473a21275bbba18da2
   }
 
   render() {
