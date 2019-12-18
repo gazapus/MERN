@@ -29,7 +29,6 @@ class ItinerariesList extends React.Component {
             onRef={ref => (this.children[index] = ref)}
             itinerary={itinerary}
             onOpen={this.closeAll}
-            comments={itinerary.comments}
           />
         </li>
       );

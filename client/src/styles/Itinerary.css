@@ -114,3 +114,26 @@
   width: 8%;
   margin-left: 20%;
 }
+.commentInputContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3%;
+}
+.commentInputContainer textarea {
+  width: 90%;
+  border-width: 2px;
+  border-style: double;
+}
+.commentInputContainer button {
+  align-self: flex-end;
+  margin-right: 5%;
+  margin-top: -3%;
+  border-radius: 20%;
+  background-color: rgb(37, 177, 219);
+  border-style: groove;
+  border-width: 2px;
+  color: white;
+}

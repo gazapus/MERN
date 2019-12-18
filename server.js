@@ -6,12 +6,14 @@ const City = require('./citySchema');
 const Itinerary = require('./ItinerarySchema');
 const User = require('./userSchema');
 const Favourite = require('./FavouriteSchema');
+const Comment = require('./CommentSchema');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 var ObjectID = require('mongodb').ObjectID;
 const keys = require('./keys');
+const jwt_decode = require('jwt-decode');
 
 const port = process.env.PORT || 5000;
 app.listen(5000, function() {
@@ -162,8 +164,7 @@ app.post('/users/login', async (req, res) => {
     username: user.username,
     photoURL: user.photoURL
   };
-  //const options = { expiresIn: 2592000 };
-  const options = { expiresIn: 600 };
+  const options = { expiresIn: 2400 };
 
   jwt.sign(payload, keys.secretSign, options, async (err, token) => {
     if (err) {
@@ -239,52 +240,131 @@ app.get(
   }
 );
 
-app.post('/favourites/update', async (req, response) => {
-  let itinerary = await Itinerary.findById(req.body.idItinerary);
-  if(!itinerary){
-    return response.status(500).send('Itinerary doesnt found');
-  }
-  let user = await User.findById(req.body.idUser);
-  if (!user) {
-    return response.status(500).send('User doesnt found');
-  }
-  let deleted = await Favourite.deleteOne({'idUser': user._id, 'idItinerary': itinerary._id});
-  if(deleted.deletedCount){
-    return response.send("removido");
-  }else{
-    let newFavourite = new Favourite({
-      'idUser': user._id,
-      'idItinerary': itinerary._id
+app.post(
+  '/favourites/update/:idItinerary',
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: './error'
+  }),
+  async (req, response) => {
+    let itinerary = await Itinerary.findById(req.params.idItinerary);
+    if (!itinerary) {
+      return response.status(500).send('Itinerary doesnt found');
+    }
+    let token = req.headers.authorization.split(' ')[1];
+    let idUser = jwt_decode(token).id;
+
+    let deleted = await Favourite.deleteOne({
+      idUser: idUser,
+      idItinerary: itinerary._id
     });
-    newFavourite.save(function(err, res) {
-      if (err) {
-        return response.status(500).send('The favourite cant be saved');
-      }
-      return response.send(res);
-    });
+    if (deleted.deletedCount) {
+      return response.send('removido');
+    } else {
+      let newFavourite = new Favourite({
+        idUser: idUser,
+        idItinerary: itinerary._id
+      });
+      newFavourite.save(function(err, res) {
+        if (err) {
+          return response.status(500).send('The favourite cant be saved');
+        }
+        return response.send(res);
+      });
+    }
   }
+);
+
+app.get(
+  '/checkFavourite/:idItinerary',
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: './error'
+  }),
+  async (req, res) => {
+    let token = req.headers.authorization.split(' ')[1];
+    let isFavourite = await Favourite.findOne({
+      idUser: jwt_decode(token).id,
+      idItinerary: req.params.idItinerary
+    });
+    if (isFavourite) {
+      return res.send(true);
+    } else {
+      return res.send(false);
+    }
+  }
+);
+
+app.get('/getFavs', async (req, res) => {
+  let favs = await Favourite.find({});
+  res.send(favs);
 });
 
-app.get('/checkFavourite', async(req, res) => {
-  let isFavourite = await Favourite.findOne({'idUser': req.body.idUser, 'idItinerary': req.body.idItinerary});
-  if(isFavourite){
-    return res.send(true);
-  }else{
-    return res.send(false);
+app.post(
+  '/comments/add',
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: '/error'
+  }),
+  async (req, response) => {
+    let token = req.headers.authorization.split(' ')[1];
+    let idUser = jwt_decode(token).id;
+    let newComment = new Comment({
+      idUser: idUser,
+      idItinerary: req.body.idItinerary,
+      text: req.body.textComment
+    });
+    newComment.save((err, res) => {
+      if (err) {
+        return response.status(500).send('The comment cant be saved');
+      } else {
+        return response.send(res);
+      }
+    });
   }
-})
+);
 
-app.get('/checkFavourite2/:idItinerary/:idUser', async(req, res) => {
-  let isFavourite = await Favourite.findOne({'idUser': req.params.idUser, 'idItinerary': req.params.idItinerary});
-  console.log(isFavourite)
-  if(isFavourite){
-    return res.send(true);
-  }else{
-    return res.send(false);
+app.get('/comments/all', async (req, res) => {
+  let allComments = await Comment.find({});
+  res.send(allComments);
+});
+
+app.put(
+  '/comments/edit',
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: '/error'
+  }),
+  async (req, response) => {
+    let originalComment = await Comment.findById(req.body.idComment);
+    originalComment.text = req.body.textComment;
+    originalComment.save((err, res) => {
+      if (err) {
+        return response.status(500).send('The comment cant be edited');
+      } else {
+        return response.send(res);
+      }
+    });
   }
-})
+);
 
-app.get('/getFavs', async(req, res) => {
-  let favs = await Favourite.find({});
-  res.send(favs)
-})
+app.delete(
+  '/comments/delete',
+  passport.authenticate('jwt', {
+    session: false,
+    failureRedirect: '/error'
+  }),
+  (req, response) => {
+    Comment.findByIdAndRemove(req.body.idComment, (err, res) => {
+      if (err) {
+        response.status(500).send('no se pudo eliminar comentario');
+      }
+      response.send(res);
+    });
+  }
+);
+
+app.get('/comments/:idItinerary', async (req, res) => {
+  let allComments = await Comment.find({ idItinerary: req.params.idItinerary });
+  res.send(allComments);
+});
