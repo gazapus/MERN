@@ -7,10 +7,14 @@ class Comment extends React.Component {
     super(props);
     this.state = {
       username: '',
-      photoURL: ''
+      photoURL: '',
+      editable: false
     };
   }
   componentDidMount() {
+       this.setState({
+            editable: this.props.editable
+       })
     axios
       .get('http://localhost:5000/users/get/' + this.props.idUser)
       .then(res => {
@@ -23,6 +27,7 @@ class Comment extends React.Component {
   }
 
   render() {
+       let editable = this.state.editable ? <p>editable</p>:<p>No editable</p>
     return (
       <div className='commentContainer'>
         <div className='commentBody'>
@@ -33,6 +38,7 @@ class Comment extends React.Component {
           <div className='textComment'>
             <p>{this.props.text}</p>
           </div>
+          {editable}
         </div>
       </div>
     );

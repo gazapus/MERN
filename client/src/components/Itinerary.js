@@ -12,6 +12,7 @@ import ActivitiesCarousel from './ActivitiesCarousel';
 import Comment from './Comment';
 import FavOn from '../images/fav-on.png';
 import FavOff from '../images/fav-off.png';
+import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 
 const HashTagList = props => {
@@ -26,10 +27,12 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
+    let tokenData = jwt_decode(this.props.currentToken); 
+    let idCurrentUser = tokenData.id;
     return this.props.comments.map(comment => {
       return (
         <li className='commentElement' key={comment._id}>
-          <Comment text={comment.text} idUser={comment.idUser} />
+          <Comment text={comment.text} idUser={comment.idUser} editable={idCurrentUser === comment.idUser}/>
         </li>
       );
     });
@@ -222,7 +225,7 @@ class Itinerary extends React.Component {
                 </button>
               </div>
               <div>
-                <CommentsList comments={this.props.comments} />
+                <CommentsList comments={this.props.comments} currentToken = {this.props.token}/>
               </div>
             </div>
             <a className='viewAllBar' onClick={this.handleClickClose}>
