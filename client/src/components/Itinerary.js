@@ -27,17 +27,11 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
-    console.log(this.props.token);
-
     let idCurrentUser = 0;
     if (this.props.currentToken != '') {
-      console.log('pasa condicion');
-
       let tokenData = jwt_decode(this.props.currentToken);
       idCurrentUser = tokenData.id;
     }
-    console.log(idCurrentUser);
-
     return this.props.comments.map(comment => {
       return (
         <li className='commentElement' key={comment._id}>

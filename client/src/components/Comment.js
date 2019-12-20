@@ -108,7 +108,7 @@ class Comment extends React.Component {
           <div className='commentContainer'>
             <div className='commentBody'>
               <div className='userCommentInfo'>
-                <img src={this.state.photoURL} alt='pic' />
+                <img src={this.state.photoURL} alt='' />
                 <p>{this.state.username}</p>
               </div>
               <div className='textComment'>
