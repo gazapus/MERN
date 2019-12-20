@@ -9,6 +9,8 @@ import '../styles/Itineraries.css';
 import NavBotton from './NavBotton';
 import HomeIcon from '../images/home.svg';
 import LeftArrowIcon from '../images/leftArrow.png';
+import AccountMenu from './AccountMenu';
+import GeneralMenu from './GeneralMenu';
 
 class ItinerariesList extends React.Component {
   children = [];
@@ -48,6 +50,12 @@ class Itineraries extends React.Component {
 
     return (
       <div id='itinerariesContainer'>
+        <nav id='navCities'>
+          <AccountMenu />
+          <span id='menu'>
+            <GeneralMenu />
+          </span>
+        </nav>
         <div id='itinerariesBody'>
           <City
             city={this.props.currentCity.city} //borré .city
