@@ -40,7 +40,7 @@ export function sendComment(_comment, token, _idItinerary) {
         console.log('comentario agregado');
       })
       .catch(err => {
-        alert('no se pudo enviar comentario');
+        alert('debe iniciar sesion');
       });
   };
 }
@@ -50,7 +50,7 @@ export function editComment(idComent, _comment, token) {
     var url = 'http://localhost:5000/comments/edit';
     const data = {
       idComment: idComent,
-      textComment: _comment,
+      textComment: _comment
     };
     const options = {
       method: 'PUT',
@@ -77,7 +77,7 @@ export function deleteComment(idComent, token) {
     var url = 'http://localhost:5000/comments/delete';
     const data = {
       idComment: idComent
-      };
+    };
     const options = {
       method: 'DELETE',
       data: qs.stringify(data),
@@ -98,7 +98,7 @@ export function deleteComment(idComent, token) {
   };
 }
 
-export function updateEditComment(editedComment){
+export function updateEditComment(editedComment) {
   console.log(editedComment);
   return {
     type: 'EDIT_COMMENT',
@@ -117,7 +117,7 @@ export function updateComments(newComment) {
   };
 }
 
-export function updateDeletedComment (deletedComment) {
+export function updateDeletedComment(deletedComment) {
   return {
     type: 'COMMENT_DELETED',
     payload: {
@@ -150,8 +150,8 @@ export function clearCommentLoadedOk() {
   };
 }
 
-export function clearCommentEdited(){
+export function clearCommentEdited() {
   return {
     type: 'CLEAR_COMMENT_EDITED'
-  }
+  };
 }
