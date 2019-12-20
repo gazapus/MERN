@@ -27,15 +27,24 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
+    console.log(this.props.token);
+
     let idCurrentUser = 0;
-    if(this.props.token !== ""){
-      let tokenData = jwt_decode(this.props.currentToken); 
+    if (this.props.token != undefined) {
+      console.log('pasa condicion');
+
+      let tokenData = jwt_decode(this.props.currentToken);
       idCurrentUser = tokenData.id;
     }
     return this.props.comments.map(comment => {
       return (
         <li className='commentElement' key={comment._id}>
-          <Comment id={comment._id} text={comment.text} idUser={comment.idUser} editable={idCurrentUser === comment.idUser}/>
+          <Comment
+            id={comment._id}
+            text={comment.text}
+            idUser={comment.idUser}
+            editable={idCurrentUser === comment.idUser}
+          />
         </li>
       );
     });
@@ -227,7 +236,10 @@ class Itinerary extends React.Component {
                 </button>
               </div>
               <div>
-                <CommentsList comments={this.props.comments} currentToken = {this.props.token}/>
+                <CommentsList
+                  comments={this.props.comments}
+                  currentToken={this.props.token}
+                />
               </div>
             </div>
             <a className='viewAllBar' onClick={this.handleClickClose}>
