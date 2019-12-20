@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-var primeraLetraAMayuscula = require('./funciones.js').primeraLetraAMayuscula;
+var primeraLetraAMayuscula = require('../funciones.js').primeraLetraAMayuscula;
 
 let citySchema = new mongoose.Schema({
   city: {

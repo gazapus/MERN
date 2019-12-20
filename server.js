@@ -2,11 +2,11 @@ const express = require('express');
 const app = express();
 var router = express.Router();
 var mongoose = require('mongoose');
-const City = require('./citySchema');
-const Itinerary = require('./ItinerarySchema');
-const User = require('./userSchema');
-const Favourite = require('./FavouriteSchema');
-const Comment = require('./CommentSchema');
+const City = require('./Schemas/citySchema');
+const Itinerary = require('./Schemas/ItinerarySchema');
+const User = require('./Schemas/userSchema');
+const Favourite = require('./Schemas/FavouriteSchema');
+const Comment = require('./Schemas/CommentSchema');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -91,7 +91,6 @@ app.get('/city/:id', (req, res) => {
   return res.send(
     city
   );*/
-  console.log('asd');
   db.collection('cities')
     .find(id)
     .toArray((err, results) => {

@@ -1,6 +1,6 @@
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
-const User = require('./userSchema');
+const User = require('./Schemas/userSchema');
 const key = 'secret';
 
 const passport = require('passport');

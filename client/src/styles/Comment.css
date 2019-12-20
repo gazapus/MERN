@@ -15,11 +15,12 @@
   background-color: white;
   display: flex;
   flex-direction: row;
+  background-color: rgb(238, 251, 255);
 }
 
 .userCommentInfo {
   margin-left: 1%;
-  width: 24%;
+  width: 23%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,10 +36,12 @@
   font-size: 3.5vmin !important;
   font-family: 'Times New Roman', Times, serif !important;
   font-weight: lighter;
+  margin-bottom: 1%;
+
 }
 
 .textComment {
-  width: 100%;
+  width: 70%;
   display: flex;
   align-items: center;
   margin: 1% 1% 0 3%;
@@ -48,4 +51,38 @@
 .commentBody p {
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: small;
+}
+
+.editButton{
+  width: 75%;
+  opacity: 0.5;
+  margin-bottom: 20%;
+}
+
+.editButton:hover{
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: 25%;
+}
+
+.buttonsComment{
+  width: 5%;
+}
+
+@media (min-width: 800px) {
+  .userCommentInfo img {
+    width: 40%;
+  }
+  .commentBody p {
+    font-size: medium;
+  }
+  .editButton{
+    width: 55%;
+    margin: 5% 0 20% 30%;
+  }
+}
+
+#editCommentInput{
+  width: 100%;
+  height: 80%;
 }

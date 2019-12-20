@@ -118,7 +118,7 @@ class SignUp extends React.Component {
           <h2>Create Acoount</h2>
           <form onSubmit={this.submit}>
             <div id='photo'>
-              <img src={this.state.photoBuffer} alt='no image' />
+              <img src={this.state.photoBuffer} alt='' />
             </div>
             <label htmlFor='photoURL' className='labelInput'>
               <span>Photo URL:</span>

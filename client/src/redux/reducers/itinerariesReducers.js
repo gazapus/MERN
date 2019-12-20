@@ -33,7 +33,6 @@ function itinerariesReducer(state = defaultState, action) {
         error: action.error
       };
     case SET_CURRENT_CITY:
-      console.log('hola');
       return {
         ...state,
         currentCity: action.payload.currentCity[0], //saque [0]

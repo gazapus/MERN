@@ -27,12 +27,15 @@ const HashTagList = props => {
 
 class CommentsList extends React.Component {
   render() {
-    let tokenData = jwt_decode(this.props.currentToken); 
-    let idCurrentUser = tokenData.id;
+    let idCurrentUser = 0;
+    if(this.props.token !== ""){
+      let tokenData = jwt_decode(this.props.currentToken); 
+      idCurrentUser = tokenData.id;
+    }
     return this.props.comments.map(comment => {
       return (
         <li className='commentElement' key={comment._id}>
-          <Comment text={comment.text} idUser={comment.idUser} editable={idCurrentUser === comment.idUser}/>
+          <Comment id={comment._id} text={comment.text} idUser={comment.idUser} editable={idCurrentUser === comment.idUser}/>
         </li>
       );
     });
@@ -58,7 +61,7 @@ class Itinerary extends React.Component {
 
   componentDidMount() {
     this.props.onRef(this);
-    if (this.props.token != '') {
+    if (this.props.token !== '') {
       let url =
         'http://localhost:5000/checkFavourite/' + this.props.itinerary._id;
       const options = {
@@ -71,7 +74,6 @@ class Itinerary extends React.Component {
       };
       axios(options)
         .then(res => {
-          console.log(res.data);
           this.setState({
             isFav: res.data,
             favImage: res.data ? FavOn : FavOff
@@ -111,7 +113,7 @@ class Itinerary extends React.Component {
   }
 
   handleFavourite() {
-    if (this.props.token == '') {
+    if (this.props.token === '') {
       return alert('Debe iniciar sesion');
     }
     this.setState({

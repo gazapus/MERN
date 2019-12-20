@@ -24,7 +24,6 @@ export function fetchItinerariesError(_error) {
 }
 
 export function setCurrentCity(city) {
-  console.log(city);
   return {
     type: SET_CURRENT_CITY,
     payload: { currentCity: city }

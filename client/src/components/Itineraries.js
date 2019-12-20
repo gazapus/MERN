@@ -38,7 +38,6 @@ class ItinerariesList extends React.Component {
 
 class Itineraries extends React.Component {
   componentDidMount() {
-    console.log('hasd');
     this.props.fetchItineraries(this.props.match.params.idCity);
     this.props.fetchCurrentCity(this.props.match.params.idCity);
   }

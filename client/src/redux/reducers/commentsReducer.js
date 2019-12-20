@@ -1,7 +1,8 @@
 const defaultState = {
   comments: [],
   error: null,
-  commentAdded: false
+  commentAdded: false,
+  commentEdited: false
 };
 
 function commentsReducer(state = defaultState, action) {
@@ -29,6 +30,39 @@ function commentsReducer(state = defaultState, action) {
         ...state,
         commentAdded: false
       };
+    case 'EDIT_COMMENT':
+      let updatedComments = state.comments;
+      console.log(action.payload.editedComment._id );
+
+      for(let comment of updatedComments){
+        console.log(comment);
+        if(comment._id === action.payload.editedComment._id ){
+          comment.text = action.payload.editedComment.text;
+        }
+      }
+      return{
+        ...state,
+        comments: updatedComments,
+        commentEdited: true
+      };
+    case 'CLEAR_COMMENT_EDITED':
+      return {
+        ...state,
+        commentEdited: false
+      };
+    case 'COMMENT_DELETED':
+      let leftComments = [];
+      console.log(action.payload.deleted);
+      for(let i=0; i<state.comments.length; i++){
+        if(action.payload.deleted._id !== state.comments[i]._id){
+          leftComments.push(state.comments[i]);
+        }
+      }
+      console.log(leftComments)
+      return {
+        ...state,
+        comments: leftComments
+      }
     default:
       return state;
   }

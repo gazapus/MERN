@@ -1,5 +1,5 @@
 let mongoose = require('mongoose');
-var primeraLetraAMayuscula = require('./funciones.js').primeraLetraAMayuscula;
+var primeraLetraAMayuscula = require('../funciones.js').primeraLetraAMayuscula;
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 var ObjectID = require('mongodb').ObjectID;
