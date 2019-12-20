@@ -392,3 +392,15 @@ app.delete('/comments/delete/all', (req, res) => {
     else return res.send('all deleted');
   });
 });
+
+app.put('/cities/addPic', async (req, response) => {
+  let cities = await City.find({});
+  //PENDIENTE
+  originalComment.save((err, res) => {
+    if (err) {
+      return response.status(500).send('The comment cant be edited');
+    } else {
+      return response.send(res);
+    }
+  });
+});

@@ -6,10 +6,15 @@
 #cityImage {
   display: flex;
   justify-content: center;
+  width: 90vmin;
+  height: 21vmin;
+  overflow: hidden;
+  background-color: blue;
 }
 
 #cityImage img {
-  width: 95%;
+  width: 100%;
+  object-fit: cover;
 }
 
 #cityName {

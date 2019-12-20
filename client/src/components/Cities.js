@@ -1,23 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Spinner } from "reactstrap";
-import { connect } from "react-redux";
-import fetchCitiesAction from "../redux/actions/fetchCities";
-import FilterForm from "./FilterForm";
-import AccountMenu from "./AccountMenu";
-import GeneralMenu from "./GeneralMenu";
-import City from "./City";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Spinner } from 'reactstrap';
+import { connect } from 'react-redux';
+import fetchCitiesAction from '../redux/actions/fetchCities';
+import FilterForm from './FilterForm';
+import AccountMenu from './AccountMenu';
+import GeneralMenu from './GeneralMenu';
+import City from './City';
 import NavBotton from './NavBotton';
-import HomeIcon from "../images/home.svg";
-import "../styles/Cities.css";
+import HomeIcon from '../images/home.svg';
+import '../styles/Cities.css';
 
 const CitiesList = props => {
   return props.cities.map(city => {
     return (
-      <li key={city._id} className="cityListElement">
-        <Link to={"/Itineraries/" + city._id}>
+      <li key={city._id} className='cityListElement'>
+        <Link to={'/Itineraries/' + city._id}>
           <City
-            image="https://www.sia.psu.edu/sites/default/files/styles/content_header/public/nyc_skyline.jpg?itok=0Lk7TAnG"
+            image='https://static.hosteltur.com/app/public/uploads/img/articles/2017/12/01/L_5b150f23729cb_shutterstock_552368572.jpg'
             city={city.city}
           />
         </Link>
@@ -53,25 +53,24 @@ class Cities extends React.Component {
   };
 
   render() {
-    if (this.props.pending)
-      return <Spinner color="primary" />;
+    if (this.props.pending) return <Spinner color='primary' />;
     return (
-      <div id="citiesContainer">
-        <div id="citiesBodyContainer">
-          <nav id="navCities">
+      <div id='citiesContainer'>
+        <div id='citiesBodyContainer'>
+          <nav id='navCities'>
             <AccountMenu />
-            <span id="menu">
+            <span id='menu'>
               <GeneralMenu />
             </span>
           </nav>
           <div>
             <FilterForm onChange={this.filterCities} />
-            <div id="listCities">
+            <div id='listCities'>
               <CitiesList cities={this.state.filteredCities} />
             </div>
           </div>
         </div>
-        <NavBotton link="/" img={HomeIcon} alt="home"/>
+        <NavBotton link='/' img={HomeIcon} alt='home' />
       </div>
     );
   }
@@ -91,7 +90,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Cities);
+export default connect(mapStateToProps, mapDispatchToProps)(Cities);
